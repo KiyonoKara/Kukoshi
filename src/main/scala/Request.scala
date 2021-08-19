@@ -20,8 +20,8 @@ import java.nio.charset.StandardCharsets
 import scala.io.Source.fromInputStream
 
 // Local utilities
-import org.kukoshi.utility.Utility.Constants
-import org.kukoshi.utility.{Utility, OutputReader, JSON => JSONUtility}
+import utility.Utility.Constants
+import utility.{OutputReader, Utility, JSON => JSONUtility}
 
 // Other
 import java.lang.reflect.Field
