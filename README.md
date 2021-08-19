@@ -24,6 +24,10 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
 - Library supports headers in the form of a `Map` or `Seq` (works with collections that can be adapted as `Iterable[(String, String)]`).
 - Can append URL parameters to a request if they are provided in the form of a `Map` or `Seq` (`Iterable[(String, String)]`). 
 - Additional function, `amend()`, which neatly formats results from `head()` and `options()` functions.
+- **Bonus Features:**
+  - No external dependencies required.
+  - Defaults to GET requests.
+  - Extra utilities.
 
 ## Usage
 (Incomplete)
