@@ -96,7 +96,7 @@ object Utility {
   /**
    * HTTP-related constants
    * {{{
-   *   import HTTPSRequestsScala.util.Constants
+   *   import org.kukoshi.Utility.Constants
    *   val GET: String = Constants.GET
    * }}}
    */
