@@ -1,4 +1,3 @@
-package org.kukoshi
 package utility
 
 /**
@@ -167,7 +166,6 @@ object JSON {
           }
         )
       }
-
     }
 
     private def value(token: Token): Any = value(List(token))
