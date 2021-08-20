@@ -29,11 +29,107 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
   - Defaults to GET requests.
   - Extra utilities.
 
-## Usage
+## Installation
 (Incomplete)
 
-## Author Notes
-(Documentation is incomplete).
+## Documentation
+As a preface, there is one read-only method, which is `GET`. Other methods such as `POST`, `DELETE`, `PUT`, and `PATCH` are writable methods (`DELETE` usually doesn't require a body`).
+
+Note: The example URL will be `https://kukoshi.scala`, it is not a real website nor host.
+
+### Importing
+Importing the library.
+```scala 
+import org.kukoshi.Request
+```
+
+### Declaration
+Primarily, the Kukoshi library is utilized through its `Request` class. There are several ways the class can be used.   
+Creating a `Request` object.
+```scala
+// A regular Request object.
+val requester: Request = new Request()
+```
+
+Optionally declaring the URL, method, and headers in the parameters. If you declare these in the constructor, you can carry out most requests using `request()` without input parameters.   
+
+### Creating a Request
+Read-only request examples.
+```scala
+// Defaults to a GET request if no method is provided.
+// Example works if there is nothing provided in the request function, but in the constructor.
+val requesterA: Request = new Request(url = "https://kukoshi.scala")
+val getA: String = requester.request()
+
+// Works the other way around.
+val requesterB: Request = new Request()
+val getB: String = requester.request(url = "https://kukoshi.scala")
+```
+
+### Headers
+Adding headers. Headers are accepted in the form of any collection that can be adapted as `Iterable[(String, String)]`, this includes but is not limited to `Map` and `Seq`.
+```scala
+// Examples for Map and Seq
+val requesterWithMapHeaders: Request = new Request(
+  url = "https://kukoshi.scala", 
+  headers = Map("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
+)
+
+val requesterWithSeqHeaders: Request = new Request(
+  url = "https://kukoshi.scala",
+  headers = Seq("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
+)
+```
+
+### URL Parameters
+When appending URL parameters to the request, URL parameters can only be added in `request()` calls. URL parameters are also accepted in the form of any collection, adaptable as `Iterable[(String, String)]`.
+```scala
+// Requests to "https://kukoshi.scala?parameter=value"
+val requesterA: Request = new Request()
+val requestA: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter" -> "value"))
+
+// Requests to "https://kukoshi.scala?parameter1=value1&parameter2=value2"
+val requesterB: Request = new Request()
+val requestB: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
+```
+
+### Writable Requests
+Writable requests generally require the `request()` function to be used since data can only be provided through it.
+```scala
+// POST request example, similar requests like this can be made for DELETE, PUT, and PATCH. 
+// Be sure to include headers if the APIs you are requesting to require them.
+val requester: Request = new Request()
+val POST: String = requester.request(url = "https://kukoshi.scala", method = "POST", data = "{\"key\": \"value\"}")
+```
+
+### JSON Data
+While it is convenient to make HTTP / HTTPS requests with this library, serializing and parsing JSON data is difficult. To solve this issue, Kukoshi has its own JSON serializer and parser.  
+- The JSON serializer supports `Map` collections to make a top-level object. `List` collections are also supported but not recommended.
+  - Nested data such as `Map`, `List`, `Int`, `Boolean`, and `String` is supported.
+
+Writable request example with JSON serialization.
+```scala
+// Serializing with the JSON object from the Request class.
+val requester: Request = new Request()
+val POST: String = requester.request(
+  url = "https://kukoshi.scala", 
+  method = "POST", 
+  data = requester.JSON.encode(Map("key" -> "value"))
+)
+```
+
+Writable request example with JSON serialization from the `utility` package of Kukoshi.
+```scala
+// With the library's JSON object
+import org.kukoshi.utility.JSON
+
+val requester: Request = new Request()
+val POST: String = requester.request(
+  url = "https://kukoshi.scala",
+  method = "POST",
+  data = JSON.encodeJSON(Map("key" -> "value"))
+)
+```
 
 ## Contributing
 Read about contributing to this library and its repository [here](CONTRIBUTING.md).
