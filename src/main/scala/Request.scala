@@ -93,10 +93,6 @@ class Request(var url: String = null, var method: String = Constants.GET, header
             i.setAccessible(true)
             this.methodField.set(i.get(httpURLConnection), method.toUpperCase)
           }
-        case other =>
-          this.methodField.set(other, method.toUpperCase)
-        case null =>
-          this.methodField.set(null, method.toUpperCase)
       }
     }
 
