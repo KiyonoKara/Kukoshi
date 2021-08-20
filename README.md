@@ -31,6 +31,7 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
 
 ## Installation
 #### Main Installation
+**Note:** This installation is faulty and does not work. For right now, the alternate installation should be used. There is a way to install GitHub packages on SBT like a regular dependency but there are no resources found yet. Will continue to look for some proper steps.   
 Remember to add the GITHUB_OWNER and to set an environment variable for authorization.
 ```sbt 
 externalResolvers += "GitHub KaNguy Apache Maven Packages" at "https://maven.pkg.github.com/KaNguy/Kukoshi"
