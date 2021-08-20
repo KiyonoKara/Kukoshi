@@ -1,5 +1,3 @@
-package org.kukoshi
-
 object Test {
   def main(args: Array[String]): Unit = {
     val requester: Request = new Request()
