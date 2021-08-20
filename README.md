@@ -31,6 +31,17 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
 
 ## Installation
 #### Main Installation
+Remember to add the GITHUB_OWNER and to set an environment variable for authorization.
+```sbt 
+externalResolvers += "GitHub KaNguy Apache Maven Packages" at "https://maven.pkg.github.com/KaNguy/Kukoshi"
+libraryDependencies += "org.kukoshi" %% "Kukoshi" % "0.1"
+credentials += Credentials(
+  "GitHub Package Registry",
+  "maven.pkg.github.com",
+  "<GITHUB_OWNER>",
+  System.getenv("GITHUB_TOKEN")
+)
+```
 
 #### Alternate Installation
 ```sbt
