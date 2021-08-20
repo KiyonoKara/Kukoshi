@@ -1,17 +1,11 @@
-package org.kukoshi
 package utility
 
-/**
- * Created by KaNguy - 08/19/2021
- * File utility/Utility.scala
- */
-
-// URL
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
 
 object Utility {
   /**
    * Encodes URL parameters for queries
+   *
    * @param str URL parameters as an iterable collection
    * @return String with the URL parameters in the URL format
    */
@@ -24,7 +18,8 @@ object Utility {
 
   /**
    * Creates an URL with a method-based approach by using an URL and taking parameters in the form of an iterable collection.
-   * @param url String with the URL
+   *
+   * @param url           String with the URL
    * @param urlParameters URL parameters
    * @return Completed URL with the parameters
    */
@@ -38,7 +33,8 @@ object Utility {
 
   /**
    * Gets a map key by its value
-   * @param map Collection map
+   *
+   * @param map   Collection map
    * @param value Value of the key
    * @return Key name
    */
@@ -48,6 +44,7 @@ object Utility {
 
   /**
    * Manipulates the key and value, and returns it all in lower-case (this is not recommended for API key headers)
+   *
    * @param map Map collection
    * @param key A valid key from the map
    * @return A new map that just has the lower-cased data
@@ -56,7 +53,7 @@ object Utility {
     val fin: Map[String, String] = Map.empty[String, String]
     map.foreach(item => {
       if (item._1 == key) {
-        return fin updated (item._1.toLowerCase, item._2.toLowerCase)
+        return fin updated(item._1.toLowerCase, item._2.toLowerCase)
       }
     })
     fin
@@ -64,6 +61,7 @@ object Utility {
 
   /**
    * Creates a valid and parsable JSON string from a provided collection; Forwarded method from the JSON object
+   *
    * @param collections Map, List, Int, Boolean, and String are valid types if the collection is started off with a Map
    * @return JSON string
    */
@@ -73,6 +71,7 @@ object Utility {
 
   /**
    * Parses JSON into a collection, primarily an immutable Map; this method is a medium for the JSON parser that is in this library.
+   *
    * @param json The JSON string
    * @return Presumably a Map
    */
@@ -129,4 +128,3 @@ object Utility {
     val DEFAULT_TIMEOUT: Int = 5000
   }
 }
-

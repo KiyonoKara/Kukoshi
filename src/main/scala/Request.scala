@@ -1,5 +1,3 @@
-package org.kukoshi
-
 /**
  * Created by KaNguy - 08/19/2021
  * File Request.scala
@@ -184,8 +182,8 @@ class Request(var url: String = null, var method: String = Constants.GET, header
     val headers: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
     val client: HttpClient = HttpClient.newHttpClient()
     val headRequest: HttpRequest = HttpRequest.newBuilder(URI.create(url))
-                      .method(Constants.HEAD, HttpRequest.BodyPublishers.noBody())
-                      .build()
+      .method(Constants.HEAD, HttpRequest.BodyPublishers.noBody())
+      .build()
 
     val response: HttpResponse[Void] = client.send(headRequest, HttpResponse.BodyHandlers.discarding())
     val responseHeaders: HttpHeaders = response.headers()
@@ -205,8 +203,8 @@ class Request(var url: String = null, var method: String = Constants.GET, header
    */
   def post(url: String = this.url, data: String = null, headers: Iterable[(String, String)] = Nil, version: String = HttpClient.Version.HTTP_2.toString): String = {
     val client: HttpClient = HttpClient.newBuilder()
-                              .version(HttpClient.Version.valueOf(version.toUpperCase))
-                              .build()
+      .version(HttpClient.Version.valueOf(version.toUpperCase))
+      .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
       .POST(HttpRequest.BodyPublishers.ofString(if (data == null) return new StringBuilder().toString() else data))
@@ -233,9 +231,9 @@ class Request(var url: String = null, var method: String = Constants.GET, header
     val optionHeaders: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
 
     val client: HttpClient = HttpClient.newBuilder()
-                            .version(HttpClient.Version.valueOf(version.toUpperCase))
-                            .connectTimeout(Duration.ofMillis(timeout))
-                            .build()
+      .version(HttpClient.Version.valueOf(version.toUpperCase))
+      .connectTimeout(Duration.ofMillis(timeout))
+      .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
       .method(Constants.OPTIONS, HttpRequest.BodyPublishers.noBody())

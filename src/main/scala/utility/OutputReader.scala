@@ -1,24 +1,14 @@
-package org.kukoshi
 package utility
 
-/**
- * Created by KaNguy - 08/19/2021
- * File utility/OutputReader.scala
- */
-
-// IO imports
 import java.io.{InputStream, InputStreamReader, Reader}
-
-// Networking
 import java.net.HttpURLConnection
-
-// Compression
-import java.util.zip.{GZIPInputStream, DeflaterInputStream}
+import java.util.zip.{DeflaterInputStream, GZIPInputStream}
 
 object OutputReader {
   /**
    * Reads output of a connection established via the HttpURLConnection class
-   * @param connection HttpURLConnection
+   *
+   * @param connection  HttpURLConnection
    * @param inputStream InputStream
    * @return String of the output
    */
