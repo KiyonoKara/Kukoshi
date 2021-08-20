@@ -30,8 +30,14 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
   - Extra utilities.
 
 ## Installation
-(Incomplete)
+#### Main Installation
 
+#### Alternate Installation
+```sbt
+// Replace USERNAME with the repository owner's username.
+lazy val http = RootProject(uri("git://github.com/{USERNAME}/Kukoshi.git"))
+lazy val http_root = project in file(".") dependsOn(http)
+```
 ## Documentation
 As a preface, there is one read-only method, which is `GET`. Other methods such as `POST`, `DELETE`, `PUT`, and `PATCH` are writable methods (`DELETE` usually doesn't require a body`).
 
