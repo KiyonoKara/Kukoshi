@@ -6,6 +6,8 @@ scalaVersion := "2.13.6"
 
 organization := "org.kukoshi"
 
+versionScheme := Some("semver-spec")
+
 homepage := Some(url("https://github.com/KaNguy/Kukoshi"))
 licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 publishMavenStyle := true
