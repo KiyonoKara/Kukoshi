@@ -3,6 +3,7 @@
 <div>
   <p>
     <a href="https://github.com/KaNguy/Kukoshi/releases"><img src="https://shields.io/github/v/release/KaNguy/Kukoshi" alt="Release Version"/></a>
+    <a href="https://github.com/KaNguy/Kukoshi/actions/workflows/scala.yml"><img src="https://github.com/KaNguy/Kukoshi/actions/workflows/scala.yml/badge.svg" alt="Scala Workflow"></a>
     <a href="https://github.com/KaNguy/Kukoshi/pulls"><img src="https://shields.io/github/issues-pr/KaNguy/Kukoshi?color=da301b" alt="PRs" /></a>
     <a><img src="https://shields.io/github/languages/code-size/KaNguy/Kukoshi?color=da301b" /></a>
     <a><img src="https://img.shields.io/github/last-commit/KaNguy/Kukoshi?color=007ace"></a>
