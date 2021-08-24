@@ -33,8 +33,16 @@ Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and 
 
 ## Installation
 #### Main Installation 
+The credentials need a token with the `read:packages` permission, the username field can be an empty string.    
 Replace `OWNER` with the respective repository owner.
 ```sbt 
+credentials += Credentials(
+  realm = "GitHub Package Registry",
+  host = "maven.pkg.github.com",
+  userName = "",
+  passwd = "<READ_PACKAGES_TOKEN>"
+)
+
 resolvers += "GitHub Package Registry (<OWNER>/Kukoshi)" at "https://maven.pkg.github.com/<OWNER>/Kukoshi"
 libraryDependencies += "org.kukoshi" %% "kukoshi" % "0.2"
 ```
