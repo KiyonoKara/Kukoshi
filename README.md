@@ -44,13 +44,13 @@ credentials += Credentials(
 )
 
 resolvers += "GitHub Package Registry (<OWNER>/Kukoshi)" at "https://maven.pkg.github.com/<OWNER>/Kukoshi"
-libraryDependencies += "org.kukoshi" %% "kukoshi" % "0.2"
+libraryDependencies += "org.kukoshi" %% "kukoshi" % "1.0.0"
 ```
 
 #### Alternate Installation
 ```sbt
-// Replace USERNAME with the repository owner's username.
-lazy val http = RootProject(uri("git://github.com/{USERNAME}/Kukoshi.git"))
+// Replace OWNER with the repository owner's username.
+lazy val http = RootProject(uri("git://github.com/<OWNER>/Kukoshi.git"))
 lazy val http_root = project in file(".") dependsOn http
 ```
 ## Documentation
