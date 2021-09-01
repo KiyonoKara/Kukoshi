@@ -59,7 +59,7 @@ As a preface, there is one read-only method, which is `GET`. Other methods such 
 Note: The example URL will be `https://kukoshi.scala`, it is not a real website nor host.
 
 ### Importing
-Importing the library.
+Importing the Request class of the library.
 ```scala 
 import org.kukoshi.Request
 ```
