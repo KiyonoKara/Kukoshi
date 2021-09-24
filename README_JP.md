@@ -15,3 +15,8 @@
 
 ## 概要
 Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpClient`などの、組み込みのJavaライブラリ/モジュールをラップしています。このScalaライブラリは、`scala.io.Source`という便利なメソッドを持つ組み込みオブジェクトから、入力ストリームの支援を得ています。
+
+## 機能 
+- レスポンスのボディーについて、GZIPやDeflateに対応しています。
+- GET、POST、DELETE、PUT、HEAD、OPTIONS、PATCHに対応しています。
+- ライブラリーにはJSONパーサやシリアライザが内蔵されています。 
