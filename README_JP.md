@@ -25,3 +25,7 @@ Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpCl
 - このライブラリーは`Map`や`Seq`対応します（`Iterable[(String, String)]`も）。
 - このライブラリーはURLのパラメーターを加えてます（`Map`または`Seq`または`Iterable[(String, String)]`付き）。
 - `head()`や`options()`より出力データをフォーマット、`amend()`を事によって。
+- **ボーナス機能：**
+  - 対外デペンデンシーは必須ではありません。
+  - GETリクエストはディフォールト。
+  - ライブラリーにはエクストラユーティリティがいます。
