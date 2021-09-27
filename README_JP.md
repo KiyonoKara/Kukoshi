@@ -21,4 +21,5 @@ Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpCl
 - GET、POST、DELETE、PUT、HEAD、OPTIONS、PATCHに対応しています。
 - ライブラリーにはJSONパーサやシリアライザが内蔵されています。 
   - JSONシリアライザはScalaのMapを用いています。だからそれはScalaのマップをJSONの有効な文字列を解析します。
-  - JSONパーサはJSONの有効な文字列をScalaのマップを解析します。
+  - JSONパーサはJSONの有効な文字列をScalaのマップを解析します。  
+- このライブラリーは`Map`や`Seq`対応します（`Iterable[(String, String)]`も）。
