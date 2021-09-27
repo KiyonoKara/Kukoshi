@@ -24,3 +24,4 @@ Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpCl
   - JSONパーサはJSONの有効な文字列をScalaのマップを解析します。  
 - このライブラリーは`Map`や`Seq`対応します（`Iterable[(String, String)]`も）。
 - このライブラリーはURLのパラメーターを加えてます（`Map`または`Seq`または`Iterable[(String, String)]`付き）。
+- `head()`や`options()`より出力データをフォーマット、`amend()`を事によって。
