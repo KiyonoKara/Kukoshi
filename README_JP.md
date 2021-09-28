@@ -32,3 +32,16 @@ Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpCl
   
 ## インストール 
 ####  メインインストール 
+トークンには許可の`read:packages`が必要です。ユーザー名のフィールドは空白ストリングになることができます。  
+`OWNER`はリポジトリ所有者に置き換えます。
+```sbt 
+credentials += Credentials(
+  realm = "GitHub Package Registry",
+  host = "maven.pkg.github.com",
+  userName = "",
+  passwd = "<READ_PACKAGES_TOKEN>"
+)
+
+resolvers += "GitHub Package Registry (<OWNER>/Kukoshi)" at "https://maven.pkg.github.com/<OWNER>/Kukoshi"
+libraryDependencies += "org.kukoshi" %% "kukoshi" % "1.0.0"
+```
