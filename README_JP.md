@@ -53,4 +53,4 @@ lazy val http = RootProject(uri("git://github.com/<OWNER>/Kukoshi.git"))
 lazy val http_root = project in file(".") dependsOn http
 ```
 
-## 文書化
+## 文献集
