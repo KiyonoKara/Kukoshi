@@ -52,6 +52,7 @@ libraryDependencies += "org.kukoshi" %% "kukoshi" % "1.0.0"
 lazy val http = RootProject(uri("git://github.com/<OWNER>/Kukoshi.git"))
 lazy val http_root = project in file(".") dependsOn http
 ```
+
 ## Documentation
 As a preface, there is one read-only method, which is `GET`. Other methods such as `POST`, `DELETE`, `PUT`, and `PATCH` are writable methods (`DELETE` usually doesn't require a body`).
 
