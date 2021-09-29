@@ -64,6 +64,7 @@ lazy val http_root = project in file(".") dependsOn http
 import org.kukoshi.Request
 ```  
 
+### 表明
 `Request`のオブジェクトを作り上げます。
 ```scala
 // Requestのオブジェクト 
