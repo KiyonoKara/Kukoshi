@@ -62,9 +62,12 @@ lazy val http_root = project in file(".") dependsOn http
 ライブラリーの`Request`のクラスをインポート。
 ```scala
 import org.kukoshi.Request
-```
+```  
 
+`Request`のオブジェクトを作り上げます。
 ```scala
 // Requestのオブジェクト 
 val requester: Request = new Request()
-```
+```  
+
+任意で、構築子の中URL、METHOD、HEADERSを宣言すできます。
