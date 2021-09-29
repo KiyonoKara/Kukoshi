@@ -65,7 +65,7 @@ import org.kukoshi.Request
 ```  
 
 ### 表明
-`Request`のオブジェクトを作り上げます。
+主に、`クコシ`は`Request`のクラスを介して使用されます。`Request`のオブジェクトを作り上げます。
 ```scala
 // Requestのオブジェクト 
 val requester: Request = new Request()
