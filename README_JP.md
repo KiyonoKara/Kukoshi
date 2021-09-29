@@ -57,3 +57,10 @@ lazy val http_root = project in file(".") dependsOn http
 書き込み禁止メソッドは一つしかない、どちらが`GET`。`POST`、`DELETE`、`PUT`、`PATCH`は書き込まれますはなることができます。
 
 サイドノート：サンプルURLは`https://kukoshi.scala.jp`になります。リアルでもリアルホストでもない。
+
+### インポート
+ライブラリーの`Request`のクラスをインポート。
+```scala
+// Requestのオブジェクト 
+val requester: Request = new Request()
+```
