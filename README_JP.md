@@ -74,3 +74,10 @@ val requester: Request = new Request()
 任意で、構築子の中URL、METHOD、HEADERSを宣言すできます。
 
 ### リクエストを作り上げられる 
+読み取り専用リクエストのサンプル
+```scala
+// METHODがない場合は、GETを使います。
+// コンストラクタのURLを提供しました。
+val requesterA: Request = new Request(url = "https://kukoshi.scala.jp")
+val getA: String = requester.request()
+```
