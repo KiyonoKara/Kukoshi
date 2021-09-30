@@ -72,3 +72,5 @@ val requester: Request = new Request()
 ```  
 
 任意で、構築子の中URL、METHOD、HEADERSを宣言すできます。
+
+### リクエストを作り上げられる 
