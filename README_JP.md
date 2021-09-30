@@ -80,4 +80,8 @@ val requester: Request = new Request()
 // コンストラクタのURLを提供しました。
 val requesterA: Request = new Request(url = "https://kukoshi.scala.jp")
 val getA: String = requester.request()
+
+// これは逆に作用します。
+val requesterB: Request = new Request()
+val getB: String = requester.request(url = "https://kukoshi.scala")
 ```
