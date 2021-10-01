@@ -102,13 +102,13 @@ val requesterWithSeqHeaders: Request = new Request(
 ```
 
 ### URLのパラメタ
-When appending URL parameters to the request, URL parameters can only be added in `request()` calls. URL parameters are also accepted in the form of any collection, adaptable as `Iterable[(String, String)]`.
+URLのパラメタをリクエストに付加します場合、URLのパラメタは`request()`コールの内側にしか付加できないことを覚えておいてください。`Iterable[(String, String)]`は適応できます。
 ```scala
-// Requests to "https://kukoshi.scala?parameter=value"
+// Requests to "https://kukoshi.scala.jp?parameter=value"
 val requesterA: Request = new Request()
 val requestA: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter" -> "value"))
 
-// Requests to "https://kukoshi.scala?parameter1=value1&parameter2=value2"
+// Requests to "https://kukoshi.scala.jp?parameter1=value1&parameter2=value2"
 val requesterB: Request = new Request()
 val requestB: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
 ```
