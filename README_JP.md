@@ -124,3 +124,6 @@ val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = 
 
 ### JSONデータ
 「クコシ」には自分のJSONパーサやJSONシリアライザがあります。
+  - JSONシリアライザは`Map`に対応しています、トップレベルのオブジェクトとしています。
+    - `Map`、`List`、`Int`、`Boolean`、`String`に対応していますといった入れ子状のデータ。
+    - トップレベルのオブジェクトとしての`List`は勧めません。
