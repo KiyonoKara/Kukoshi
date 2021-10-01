@@ -114,3 +114,4 @@ val requestB: String = requester.request(url = "https://kukoshi.scala.jp", param
 ```
 
 ### 書き込み可能リクエスト
+`request()`は書き込み可能リクエスト機能に使われます。
