@@ -113,3 +113,4 @@ val requesterB: Request = new Request()
 val requestB: String = requester.request(url = "https://kukoshi.scala.jp", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
 ```
 
+### 書き込み可能リクエスト
