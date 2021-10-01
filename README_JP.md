@@ -106,9 +106,9 @@ URLのパラメタをリクエストに付加します場合、URLのパラメ�
 ```scala
 // リクエストへの『https://kukoshi.scala.jp?parameter=value』
 val requesterA: Request = new Request()
-val requestA: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter" -> "value"))
+val requestA: String = requester.request(url = "https://kukoshi.scala.jp", parameters = Map("parameter" -> "value"))
 
-// リクエストへの "https://kukoshi.scala.jp?parameter1=value1&parameter2=value2"
+// リクエストへの『https://kukoshi.scala.jp?parameter1=value1&parameter2=value2』
 val requesterB: Request = new Request()
-val requestB: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
+val requestB: String = requester.request(url = "https://kukoshi.scala.jp", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
 ```
