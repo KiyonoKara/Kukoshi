@@ -127,3 +127,14 @@ val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = 
   - JSONシリアライザは`Map`に対応しています、トップレベルのオブジェクトとしています。
     - `Map`、`List`、`Int`、`Boolean`、`String`に対応していますといった入れ子状のデータ。
     - トップレベルのオブジェクトとしての`List`は勧めません。
+
+書き込み可能リクエストサンプルとJSONシリアライズド.
+```scala
+// RequestクラスでJSONオブジェクトをシリアライズド。
+val requester: Request = new Request()
+val POST: String = requester.request(
+  url = "https://kukoshi.scala.jp", 
+  method = "POST", 
+  data = requester.JSON.encode(Map("key" -> "value"))
+)
+```
