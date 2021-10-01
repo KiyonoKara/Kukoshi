@@ -112,3 +112,4 @@ val requestA: String = requester.request(url = "https://kukoshi.scala.jp", param
 val requesterB: Request = new Request()
 val requestB: String = requester.request(url = "https://kukoshi.scala.jp", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
 ```
+
