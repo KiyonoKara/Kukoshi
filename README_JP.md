@@ -151,3 +151,6 @@ val POST: String = requester.request(
   data = JSON.encodeJSON(Map("key" -> "value"))
 )
 ```
+
+## 助けについて
+リポジトリを助け合っていますについては[これ](CONTRIBUTING.md)を読んでください。
