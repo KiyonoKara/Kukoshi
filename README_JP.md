@@ -128,7 +128,7 @@ val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = 
     - `Map`、`List`、`Int`、`Boolean`、`String`に対応していますといった入れ子状のデータ。
     - トップレベルのオブジェクトとしての`List`は勧めません。
 
-書き込み可能リクエストサンプルとJSONシリアライズド.
+書き込み可能リクエストサンプルとJSONシリアライズド。
 ```scala
 // RequestクラスでJSONオブジェクトをシリアライズド。
 val requester: Request = new Request()
@@ -136,5 +136,18 @@ val POST: String = requester.request(
   url = "https://kukoshi.scala.jp", 
   method = "POST", 
   data = requester.JSON.encode(Map("key" -> "value"))
+)
+```
+
+「クコシ」の`utility`パッケージから書き込み可能リクエストサンプルとJSONシリアライズド。
+```scala
+// ライブラリーのJSONオブジェクト。
+import org.kukoshi.utility.JSON
+
+val requester: Request = new Request()
+val POST: String = requester.request(
+  url = "https://kukoshi.scala.jp",
+  method = "POST",
+  data = JSON.encodeJSON(Map("key" -> "value"))
 )
 ```
