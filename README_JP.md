@@ -123,3 +123,4 @@ val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = 
 ```
 
 ### JSONデータ
+「クコシ」には自分のJSONパーサやJSONシリアライザがあります。
