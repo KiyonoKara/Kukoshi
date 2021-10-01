@@ -115,3 +115,9 @@ val requestB: String = requester.request(url = "https://kukoshi.scala.jp", param
 
 ### 書き込み可能リクエスト
 `request()`は書き込み可能リクエスト機能に使われます。
+```scala
+// POSTリクエストのサンプル。DELETE、PUT、PATCHは等しいです。
+// ヘッダを入れることができます。
+val requester: Request = new Request()
+val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = "POST", data = "{\"key\": \"value\"}")
+```
