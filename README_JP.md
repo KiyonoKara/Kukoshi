@@ -121,3 +121,5 @@ val requestB: String = requester.request(url = "https://kukoshi.scala.jp", param
 val requester: Request = new Request()
 val POST: String = requester.request(url = "https://kukoshi.scala.jp", method = "POST", data = "{\"key\": \"value\"}")
 ```
+
+### JSONデータ
