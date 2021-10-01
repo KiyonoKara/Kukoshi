@@ -85,3 +85,18 @@ val getA: String = requester.request()
 val requesterB: Request = new Request()
 val getB: String = requester.request(url = "https://kukoshi.scala.jp")
 ```
+
+### ヘッダ
+`Map`や`Seq`対応しました（`Iterable[(String, String)]`も）。
+```scala
+// MapやSeqのサンプル
+val requesterWithMapHeaders: Request = new Request(
+  url = "https://kukoshi.scala.jp", 
+  headers = Map("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
+)
+
+val requesterWithSeqHeaders: Request = new Request(
+  url = "https://kukoshi.scala.jp",
+  headers = Seq("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
+)
+```
