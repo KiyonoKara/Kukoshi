@@ -126,7 +126,7 @@ val POST: String = requester.request(url = "https://kukoshi.scala", method = "PO
 ### JSON Data
 While it is convenient to make HTTP / HTTPS requests with this library, serializing and parsing JSON data is difficult. To solve this issue, Kukoshi has its own JSON serializer and parser.  
 - The JSON serializer supports `Map` collections to make a top-level object. `List` collections are also supported at top-level but not recommended.
-  - Nested data such as `Map`, `List`, `Int`, `Boolean`, and `String` is supported.
+  - Nested data such as `Map`, `List`, `Int`, `Boolean`, and `String` are supported.
 
 Writable request example with JSON serialization.
 ```scala
