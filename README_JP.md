@@ -154,3 +154,6 @@ val POST: String = requester.request(
 
 ## 助けについて
 リポジトリを助け合っていますについては[これ](CONTRIBUTING.md)を読んでください。
+
+## ライセンス
+「Apache 2.0」ライセンス
