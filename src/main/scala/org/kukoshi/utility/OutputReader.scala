@@ -41,7 +41,6 @@ object OutputReader {
       if (ch == -1) {
         return stringBuilder.toString()
       }
-
       stringBuilder.append(ch.asInstanceOf[Char]).toString
     }
     stringBuilder.toString
