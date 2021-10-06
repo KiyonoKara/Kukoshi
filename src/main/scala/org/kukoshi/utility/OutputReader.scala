@@ -38,9 +38,6 @@ object OutputReader {
     // Appending the data to a String Builder
     while (ch != -1) {
       ch = reader.read()
-      if (ch == -1) {
-        return stringBuilder.toString()
-      }
       stringBuilder.append(ch.asInstanceOf[Char]).toString
     }
     stringBuilder.toString
