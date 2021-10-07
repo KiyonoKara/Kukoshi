@@ -267,17 +267,13 @@ class Request(var url: String = null, var method: String = Constants.GET, header
      * @param collections Any; Accepts collections and primitive types.
      * @return Valid JSON data as a string.
      */
-    def encode(collections: Iterable[(Any, Any)]): String = {
-      JSONUtility.encodeJSON(collections)
-    }
+    def encode(collections: Iterable[(Any, Any)]): String = JSONUtility.encodeJSON(collections)
 
     /**
      * Parses JSON into default collections such as Map and List
      * @param json JSON data in the form of a string
      * @return Map with Any-values, related to collections
      */
-    def parse(json: String): Map[Any, Any] = {
-      JSONUtility.parse(json).asInstanceOf[Map[Any, Any]]
-    }
+    def parse(json: String): Map[Any, Any] = JSONUtility.parse(json).asInstanceOf[Map[Any, Any]]
   }
 }
