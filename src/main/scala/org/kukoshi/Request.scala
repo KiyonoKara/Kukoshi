@@ -131,7 +131,7 @@ class Request(var url: String = null, var method: String = Constants.GET, header
    * @param data Preferably JSON data in the form of a string.
    * @return output Generally returns the output of the Output Reader
    */
-  def writeToRequest(connection: HttpURLConnection, method: String, data: String): String = {
+  private def writeToRequest(connection: HttpURLConnection, method: String, data: String): String = {
     val theMethod: String = method.toUpperCase
     if (theMethod.equals(Constants.POST) || theMethod.equals(Constants.PUT) || theMethod.equals(Constants.PATCH)) connection.setDoOutput(true)
 
