@@ -8,15 +8,15 @@ organization := "org.kukoshi"
 
 versionScheme := Some("semver-spec")
 
-homepage := Some(url("https://github.com/KaNguy/Kukoshi"))
+homepage := Some(url("https://github.com/KiyonoKara/Kukoshi"))
 licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 publishMavenStyle := true
 pomIncludeRepository := { _ => false }
 
-publishTo := Some("GitHub KaNguy Apache Maven Packages" at "https://maven.pkg.github.com/KaNguy/Kukoshi")
+publishTo := Some("GitHub KiyonoKara Apache Maven Packages" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi")
 credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
-  "KaNguy",
+  "KiyonoKara",
   System.getenv("GITHUB_TOKEN")
 )
