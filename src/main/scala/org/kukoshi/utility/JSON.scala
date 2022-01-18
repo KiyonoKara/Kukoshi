@@ -1,7 +1,7 @@
 package org.kukoshi.utility
 
 /**
- * Created by KaNguy - 08/19/2021
+ * Created by KiyonoKara - 08/19/2021
  * File org/kukoshi/utility/JSON.scala
  */
 
