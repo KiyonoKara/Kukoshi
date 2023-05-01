@@ -5,8 +5,8 @@
     <a href="https://github.com/KiyonoKara/Kukoshi/releases"><img src="https://shields.io/github/v/release/KiyonoKara/Kukoshi" alt="製品版"/></a>
     <a href="https://github.com/KiyonoKara/Kukoshi/actions/workflows/scala.yml"><img src="https://github.com/KiyonoKara/Kukoshi/actions/workflows/scala.yml/badge.svg" alt="スケーラのワークフロー"></a>
     <a href="https://github.com/KiyonoKara/Kukoshi/pulls"><img src="https://shields.io/github/issues-pr/KiyonoKara/Kukoshi?color=da301b" alt="PRs" /></a>
-    <a><img src="https://shields.io/github/languages/code-size/KiyonoKara/Kukoshi?color=da301b" /></a>
-    <a><img src="https://img.shields.io/github/last-commit/KiyonoKara/Kukoshi?color=007ace"></a>
+    <a><img src="https://shields.io/github/languages/code-size/KiyonoKara/Kukoshi?color=da301b"  alt="サイズ"/></a>
+    <a><img src="https://img.shields.io/github/last-commit/KiyonoKara/Kukoshi?color=007ace" alt="最新コミット"></a>
     <a href="LICENSE.md"><img src="https://img.shields.io/github/license/KiyonoKara/Kukoshi?color=007ace" alt="ライセンス" /></a>
   </p>
 </div>
@@ -32,7 +32,7 @@ Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpCl
   
 ## インストール 
 ####  メインインストール 
-トークンには許可の`read:packages`が必要です。ユーザー名のフィールドは空白ストリングになることができます。  
+トークンには許可の`read:packages`が必要です。ユーザー名のフィールドは空白ストリングのなるのができます。  
 `OWNER`はリポジトリ所有者に置き換えます。
 ```sbt 
 credentials += Credentials(
@@ -54,9 +54,9 @@ lazy val http_root = project in file(".") dependsOn http
 ```
 
 ## 文献集
-書き込み禁止メソッドは一つしかない、どちらが`GET`。`POST`、`DELETE`、`PUT`、`PATCH`は書き込まれますはなることができます。
+書き込み禁止メソッドは一つしかない、どちらが`GET`。`POST`、`DELETE`、`PUT`、`PATCH`は書き込まれますはなるのができます。
 
-サイドノート：サンプルURLは`https://kukoshi.scala.jp`になります。リアルでもリアルホストでもない。
+メモ：サンプルURLは`https://kukoshi.scala.jp`になります。リアルでもリアルホストでもない。
 
 ### インポート
 ライブラリーの`Request`のクラスをインポート。
@@ -153,7 +153,7 @@ val POST: String = requester.request(
 ```
 
 ## 助けについて
-リポジトリを助け合っていますについては[これ](CONTRIBUTING.md)を読んでください。
+リポジトリを助け合っていますについては[こちら](CONTRIBUTING.md)を読んでください。
 
 ## ライセンス
 「Apache 2.0」ライセンス
