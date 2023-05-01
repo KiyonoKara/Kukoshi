@@ -53,30 +53,10 @@ object Utility {
     val fin: Map[String, String] = Map.empty[String, String]
     map.foreach(item => {
       if (item._1 == key) {
-        return fin updated(item._1.toLowerCase, item._2.toLowerCase)
+        fin updated(item._1.toLowerCase, item._2.toLowerCase)
       }
     })
     fin
-  }
-
-  /**
-   * Creates a valid and parsable JSON string from a provided collection; Forwarded method from the JSON object
-   *
-   * @param collections Map, List, Int, Boolean, and String are valid types if the collection is started off with a Map
-   * @return JSON string
-   */
-  def encodeJSON(collections: Any): String = {
-    JSON.encodeJSON(collections)
-  }
-
-  /**
-   * Parses JSON into a collection, primarily an immutable Map; this method is a medium for the JSON parser that is in this library.
-   *
-   * @param json The JSON string
-   * @return Presumably a Map
-   */
-  def parseJSON(json: String): Any = {
-    JSON.parse(json)
   }
 
   def setHeaders(connection: HttpURLConnection, headers: Iterable[(String, String)] = Nil): Unit = {
