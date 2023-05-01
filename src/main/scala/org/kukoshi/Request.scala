@@ -21,7 +21,7 @@ import scala.io.Source.fromInputStream
 
 // Local utilities
 import org.kukoshi.utility.Utility.Constants
-import org.kukoshi.utility.{OutputReader, Utility, JSON => JSONUtility}
+import org.kukoshi.utility.{OutputReader, Utility}
 
 // Other
 import java.lang.reflect.Field
@@ -246,22 +246,5 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
       str += "%s: %s%n".format(entry._1, entry._2)
     })
     str
-  }
-
-  // JSON object embedded in the Request class since it is the main class after-all
-  object JSON {
-    /**
-     * Can turn collections into JSON data as a string
-     * @param collections Any; Accepts collections and primitive types.
-     * @return Valid JSON data as a string.
-     */
-    def encode(collections: Iterable[(Any, Any)]): String = JSONUtility.encodeJSON(collections)
-
-    /**
-     * Parses JSON into default collections such as Map and List
-     * @param json JSON data in the form of a string
-     * @return Map with Any-values, related to collections
-     */
-    def parse(json: String): Map[Any, Any] = JSONUtility.parse(json).asInstanceOf[Map[Any, Any]]
   }
 }
