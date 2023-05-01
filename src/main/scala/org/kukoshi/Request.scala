@@ -35,7 +35,7 @@ import scala.jdk.CollectionConverters._
  * @param method String; Request method, refer to the Constants file for supported methods
  * @param headers Iterable[(String, String)]; Headers in the form of a Map collection is primarily valid
  */
-class Request(var url: String = null, var method: String = Constants.GET, headers: Iterable[(String, String)] = Nil) {
+class Request(var url: String = "", var method: String = Constants.GET, headers: Iterable[(String, String)] = Nil) {
   private lazy val methodField: Field = {
     val method = classOf[HttpURLConnection].getDeclaredField("method")
     method.setAccessible(true)
@@ -58,19 +58,7 @@ class Request(var url: String = null, var method: String = Constants.GET, header
     val parsedURL: URL = new URL(requestURL)
 
     // Create the connection from the provided URL
-    var connection: HttpURLConnection = null
-    try {
-      connection = parsedURL.openConnection.asInstanceOf[HttpURLConnection] match {
-        case _: HttpURLConnection => parsedURL.openConnection.asInstanceOf[HttpURLConnection];
-      }
-    } catch {
-      case connectException: ConnectException =>
-        connectException.printStackTrace()
-        throw connectException
-      case sslException: SSLException =>
-        sslException.printStackTrace()
-        throw sslException
-    }
+    val connection: HttpURLConnection = parsedURL.openConnection.asInstanceOf[HttpURLConnection]
 
     // Set the request method
     if (Constants.HTTPMethods.contains(method.toUpperCase)) {
@@ -108,7 +96,7 @@ class Request(var url: String = null, var method: String = Constants.GET, header
     }
 
     if (method.toUpperCase.equals(Constants.GET)) {
-      return OutputReader.read(connection, connection.getInputStream)
+      return OutputReader.read(connection)
     }
 
     if (method.toUpperCase.equals(Constants.POST) || method.toUpperCase.equals(Constants.DELETE) || method.toUpperCase.equals(Constants.PUT) || method.toUpperCase.equals(Constants.PATCH)) {
@@ -157,7 +145,7 @@ class Request(var url: String = null, var method: String = Constants.GET, header
       // Get output of request
       val inputStream: InputStream = connection.getInputStream
       if (connection.getContentEncoding != null && connection.getContentEncoding.nonEmpty) {
-        val content: String = OutputReader.read(connection, inputStream)
+        val content: String = OutputReader.read(connection)
         content
       } else {
         val content: String = fromInputStream(inputStream).mkString
