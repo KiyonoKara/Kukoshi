@@ -9,7 +9,7 @@ object Utility {
    * @param str URL parameters as an iterable collection
    * @return String with the URL parameters in the URL format
    */
-  def encodeURLParameters(str: Iterable[(String, String)]): String = {
+  private def encodeURLParameters(str: Iterable[(String, String)]): String = {
     str.map({
       case (k, v) =>
         s"""${URLEncoder.encode(k, "UTF-8")}=${URLEncoder.encode(v, "UTF-8")}"""
