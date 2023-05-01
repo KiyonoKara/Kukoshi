@@ -1,9 +1,6 @@
 # Packaging
 src/test
 
-# JSON is deprecated
-src/org/kukoshi/utility/JSON.scala
-
 # Builds
 .bsp
 
