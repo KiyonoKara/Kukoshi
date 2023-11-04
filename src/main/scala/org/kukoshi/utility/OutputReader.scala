@@ -2,15 +2,15 @@ package org.kukoshi.utility
 
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
-import java.util.zip.{DeflaterInputStream, GZIPInputStream}
+import java.util.zip.{InflaterInputStream, GZIPInputStream}
 import scala.collection.mutable.{StringBuilder => StrBuilder}
 
 object OutputReader {
   /**
    * Reads output of a connection established via the HttpURLConnection class
    *
-   * @param connection  HttpURLConnection
-   * @return String of the output
+   * @param connection HttpURLConnection
+   * @return Data as a String
    */
   def read(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
@@ -18,15 +18,13 @@ object OutputReader {
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
     // GZIP & Deflate data streaming
-    // TODO: correct this by checking the headers set by the program
-    /*
-    if (connection.getContentEncoding != null && connection.getContentEncoding.nonEmpty) {
+    if (connection.getHeaderFields.containsKey("Content-Encoding")) {
       connection.getContentEncoding match {
         case "gzip" => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
-        case "deflate" => reader = new InputStreamReader(new DeflaterInputStream(connectionInputStream))
+        case "deflate" => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
         case _ => reader = new InputStreamReader(connection.getInputStream)
       }
-    }*/
+    }
 
     // Empty char value
     var ch: Int = 0
