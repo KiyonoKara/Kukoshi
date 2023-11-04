@@ -92,10 +92,6 @@ class Request(var url: String = "",
       }
     }
 
-    // Timeouts
-    connection.setConnectTimeout(Constants.DEFAULT_TIMEOUT)
-    connection.setReadTimeout(Constants.DEFAULT_TIMEOUT)
-
     // Sets headers
     if (headers.nonEmpty) {
       Utility.setHeaders(connection, headers)

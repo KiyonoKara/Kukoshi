@@ -96,8 +96,5 @@ object Utility {
      * Officially supported methods
      */
     val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
-
-    // Timeout
-    val DEFAULT_TIMEOUT: Int = 5000
   }
 }
