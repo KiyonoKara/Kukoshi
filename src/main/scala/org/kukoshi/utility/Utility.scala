@@ -74,6 +74,7 @@ object Utility {
 
   /**
    * HTTP-related constants
+   * Import example
    * {{{
    *   import org.kukoshi.Utility.Constants
    *   val GET: String = Constants.GET
@@ -92,19 +93,8 @@ object Utility {
     val PATCH: String = "PATCH"
 
     /**
-     * Environment HTTP/HTTPS methods
-     */
-    val CONNECT: String = "CONNECT"
-    val TRACE: String = "TRACE"
-
-    /**
      * Officially supported methods
      */
-    val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS, TRACE)
-
-    /**
-     * Timeouts
-     */
-    val DEFAULT_TIMEOUT: Int = 5000
+    val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
   }
 }

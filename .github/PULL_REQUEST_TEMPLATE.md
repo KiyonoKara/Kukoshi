@@ -3,8 +3,8 @@
 Please summarize your changes, with relevant context. Be sure to also state whether it fixes an issue or not. If no issues were fixed, there is no need to fill out the field.
 (Note: This is not a full PR template, but it serves its purpose).
 
-#### Issues Fixed
-[Fill in this field]
+#### Issues Addressed
+[Fill in this field if any]
 
 
 ## Change Type
@@ -12,8 +12,8 @@ Please summarize your changes, with relevant context. Be sure to also state whet
 Please select the options that are relevant to your pull request.
 
 - [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change (You should have a possible fix ready)
+- [ ] New feature(s)
+- [ ] Breaking change
 - [ ] This change requires a documentation update
 
 ## Tests

@@ -2,15 +2,14 @@ package org.kukoshi.utility
 
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
-import java.util.zip.{DeflaterInputStream, GZIPInputStream}
-import scala.collection.mutable.{StringBuilder => StrBuilder}
+import java.util.zip.{GZIPInputStream, InflaterInputStream}
 
 object OutputReader {
   /**
    * Reads output of a connection established via the HttpURLConnection class
    *
-   * @param connection  HttpURLConnection
-   * @return String of the output
+   * @param connection HttpURLConnection
+   * @return Data as a String
    */
   def read(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
@@ -18,22 +17,20 @@ object OutputReader {
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
     // GZIP & Deflate data streaming
-    // TODO: correct this by checking the headers set by the program
-    /*
-    if (connection.getContentEncoding != null && connection.getContentEncoding.nonEmpty) {
+    if (connection.getHeaderFields.containsKey("Content-Encoding")) {
       connection.getContentEncoding match {
         case "gzip" => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
-        case "deflate" => reader = new InputStreamReader(new DeflaterInputStream(connectionInputStream))
+        case "deflate" => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
         case _ => reader = new InputStreamReader(connection.getInputStream)
       }
-    }*/
+    }
 
     // Empty char value
     var ch: Int = 0
 
     // String Builder to add to the final string
     // StringBuilder => StrBuilder
-    val stringBuilder: StrBuilder = new StrBuilder()
+    val stringBuilder: StringBuilder = new StringBuilder()
 
     // Appending the data to a String Builder
     while (ch != -1) {
