@@ -92,19 +92,11 @@ object Utility {
     val PATCH: String = "PATCH"
 
     /**
-     * Environment HTTP/HTTPS methods
-     */
-    val CONNECT: String = "CONNECT"
-    val TRACE: String = "TRACE"
-
-    /**
      * Officially supported methods
      */
-    val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS, TRACE)
+    val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
 
-    /**
-     * Timeouts
-     */
+    // Timeout
     val DEFAULT_TIMEOUT: Int = 5000
   }
 }
