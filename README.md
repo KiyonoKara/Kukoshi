@@ -5,36 +5,33 @@
     <a href="https://github.com/KiyonoKara/Kukoshi/releases"><img src="https://shields.io/github/v/release/KiyonoKara/Kukoshi" alt="Release Version"/></a>
     <a href="https://github.com/KiyonoKara/Kukoshi/actions/workflows/scala.yml"><img src="https://github.com/KiyonoKara/Kukoshi/actions/workflows/scala.yml/badge.svg" alt="Scala Workflow"></a>
     <a href="https://github.com/KiyonoKara/Kukoshi/pulls"><img src="https://shields.io/github/issues-pr/KiyonoKara/Kukoshi?color=da301b" alt="PRs" /></a>
-    <a><img src="https://shields.io/github/languages/code-size/KiyonoKara/Kukoshi?color=da301b" /></a>
-    <a><img src="https://img.shields.io/github/last-commit/KiyonoKara/Kukoshi?color=007ace"></a>
+    <a><img src="https://shields.io/github/languages/code-size/KiyonoKara/Kukoshi?color=da301b" alt="Code Size" /></a>
+    <a><img src="https://img.shields.io/github/last-commit/KiyonoKara/Kukoshi?color=007ace" alt="Last Commit" /></a>
     <a href="LICENSE.md"><img src="https://img.shields.io/github/license/KiyonoKara/Kukoshi?color=007ace" alt="License" /></a>
   </p>
 </div>
 
-Kukoshi, is a Scala library made for HTTP / HTTPS requests.
+Kukoshi, is a Scala library made for making HTTP / HTTPS requests.
 
 ## Overview
-Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and classes from `java.net.http._`, primarily `HttpClient`. This Scala library gets assistance for input streams from `scala.io.Source`, a built-in object with convenience methods.
+Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and classes from `java.net`'s suite. This Scala library gets assistance for input streams from `scala.io.Source`, a built-in object with convenience methods.
 
 ## Features
-- GZIP and Deflate support for incoming response bodies. 
+- GZIP and Deflate support for compressed responses and data. 
 - Supports GET, POST, DELETE, PUT, HEAD, OPTIONS, PATCH methods.
-- Has a built-in JSON serializer and parser.
-  - The JSON serializer primarily takes immutable (default) Scala maps to parse a collection into a valid JSON string.
-  - The JSON parser parsers a valid JSON string into an immutable Scala map.  
 - Library supports headers in the form of a `Map` or `Seq` (works with collections that can be adapted as `Iterable[(String, String)]`).
-- Can append URL parameters to a request if they are provided in the form of a `Map` or `Seq` (`Iterable[(String, String)]`). 
-- Additional function, `amend()`, which neatly formats results from `head()` and `options()` functions.
+- Can append URL parameters to a request if they are provided in the form of a `Map` or `Seq` (`Iterable[(String, String)]`).
 - **Bonus Features:**
   - No external dependencies required.
   - Defaults to GET requests.
-  - Extra utilities.
+  - `head` and `options` for header-based requests.
+  - `amend()` neatly formats results from `head()` function or data of `Map[String, List[String]]` type.
+  - Extra utilities from the `Utility` object.
 
 ## Installation
-#### Main Installation 
-The credentials need a token with the `read:packages` permission, the username field can be an empty string.    
-Replace `OWNER` with the respective repository owner.
-```sbt 
+### Main (Preferred) Installation 
+The credentials need a token with the `read:packages` permission, the username field can be an empty string.
+```sbt
 credentials += Credentials(
   realm = "GitHub Package Registry",
   host = "maven.pkg.github.com",
@@ -42,14 +39,13 @@ credentials += Credentials(
   passwd = "<READ_PACKAGES_TOKEN>"
 )
 
-resolvers += "GitHub Package Registry (<OWNER>/Kukoshi)" at "https://maven.pkg.github.com/<OWNER>/Kukoshi"
-libraryDependencies += "org.kukoshi" %% "kukoshi" % "1.0.0"
+resolvers += "GitHub Package Registry (KiyonoKara/Kukoshi)" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi"
+libraryDependencies += "org.kukoshi" %% "kukoshi" % "2.0.0"
 ```
 
 #### Alternate Installation
 ```sbt
-// Replace OWNER with the repository owner's username.
-lazy val http = RootProject(uri("git://github.com/<OWNER>/Kukoshi.git"))
+lazy val http = RootProject(uri("git://github.com/KiyonoKara/Kukoshi.git"))
 lazy val http_root = project in file(".") dependsOn http
 ```
 
@@ -88,7 +84,7 @@ val getB: String = requester.request(url = "https://kukoshi.scala")
 ```
 
 ### Headers
-Adding headers. Headers are accepted in the form of any collection that can be adapted as `Iterable[(String, String)]`, this includes but is not limited to `Map` and `Seq`.
+Headers are accepted in the form of any collection that can be adapted as `Iterable[(String, String)]`, this includes but is not limited to `Map` and `Seq`.
 ```scala
 // Examples for Map and Seq
 val requesterWithMapHeaders: Request = new Request(
@@ -123,37 +119,8 @@ val requester: Request = new Request()
 val POST: String = requester.request(url = "https://kukoshi.scala", method = "POST", data = "{\"key\": \"value\"}")
 ```
 
-### JSON Data
-While it is convenient to make HTTP / HTTPS requests with this library, serializing and parsing JSON data is difficult. To solve this issue, Kukoshi has its own JSON serializer and parser.  
-- The JSON serializer supports `Map` collections to make a top-level object. `List` collections are also supported at top-level but not recommended.
-  - Nested data such as `Map`, `List`, `Int`, `Boolean`, and `String` are supported.
-
-Writable request example with JSON serialization.
-```scala
-// Serializing with the JSON object from the Request class.
-val requester: Request = new Request()
-val POST: String = requester.request(
-  url = "https://kukoshi.scala", 
-  method = "POST", 
-  data = requester.JSON.encode(Map("key" -> "value"))
-)
-```
-
-Writable request example with JSON serialization from the `utility` package of Kukoshi.
-```scala
-// With the library's JSON object
-import org.kukoshi.utility.JSON
-
-val requester: Request = new Request()
-val POST: String = requester.request(
-  url = "https://kukoshi.scala",
-  method = "POST",
-  data = JSON.encodeJSON(Map("key" -> "value"))
-)
-```
-
 ## Contributing
 Read about contributing to this library and its repository [here](CONTRIBUTING.md).
 
 ## License
-Apache 2.0 License
+[Apache 2.0 License](LICENSE.md)
