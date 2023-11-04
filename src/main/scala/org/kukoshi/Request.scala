@@ -6,8 +6,8 @@ package org.kukoshi
  */
 
 // Networking and web
-import java.net.{ConnectException, HttpURLConnection, URI, URL}
-import javax.net.ssl.SSLException
+
+import java.net.{HttpURLConnection, URI, URL}
 
 // Java HTTP
 import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
@@ -31,11 +31,17 @@ import scala.jdk.CollectionConverters._
 
 /**
  * Main class for making HTTP/HTTPS requests
- * @param url String; Provide an URL with its path (if you are requesting with the path)
- * @param method String; Request method, refer to the Constants file for supported methods
+ *
+ * @param url     String; Provide an URL with its path (if you are requesting with the path)
+ * @param method  String; Request method, refer to the Constants file for supported methods
  * @param headers Iterable[(String, String)]; Headers in the form of a Map collection is primarily valid
  */
-class Request(var url: String = "", var method: String = Constants.GET, headers: Iterable[(String, String)] = Nil) {
+class Request(var url: String = "",
+              var method: String = Constants.GET,
+              headers: Iterable[(String, String)] = Map(
+                "Accept-Encoding" -> "gzip, deflate",
+                "Connection" -> "keep-alive")
+             ) {
   private lazy val methodField: Field = {
     val method = classOf[HttpURLConnection].getDeclaredField("method")
     method.setAccessible(true)
@@ -45,10 +51,11 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
 
   /**
    * The request method for the class that completes the HTTP/HTTPS requests
-   * @param url String; Provide an URL
-   * @param method String; Request method, defaults to the class' default method
-   * @param headers Iterable[(String, String)]; Headers for requesting
-   * @param data String; Preferably JSON data that is in the form of a string
+   *
+   * @param url        String; Provide an URL
+   * @param method     String; Request method, defaults to the class' default method
+   * @param headers    Iterable[(String, String)]; Headers for requesting
+   * @param data       String; Preferably JSON data that is in the form of a string
    * @param parameters Iterable[(String, String)]; URL parameters that can be used for querying
    * @return Output as a string
    */
@@ -114,9 +121,10 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
 
   /**
    * Writes to a request
+   *
    * @param connection HttpURLConnection; The connection established will be used so it can be written to.
-   * @param method A method is always required, cannot default to a common request method
-   * @param data Preferably JSON data in the form of a string.
+   * @param method     A method is always required, cannot default to a common request method
+   * @param data       Preferably JSON data in the form of a string.
    * @return output Generally returns the output of the Output Reader
    */
   private def writeToRequest(connection: HttpURLConnection, method: String, data: String): String = {
@@ -124,7 +132,7 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
     if (theMethod.equals(Constants.POST) || theMethod.equals(Constants.PUT) || theMethod.equals(Constants.PATCH)) connection.setDoOutput(true)
 
     // Processing the data
-    if (data == null || data.isEmpty) {
+    if (data.isEmpty) {
       val inputStream: InputStream = connection.getInputStream
       val content: String = fromInputStream(inputStream).mkString
       inputStream.close()
@@ -161,6 +169,7 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
 
   /**
    * Creates a HEAD request that gets the headers of the response, there is no body from HEAD requests nor its responses.
+   *
    * @param url Provide an URL for making the HEAD request
    * @return A Map with all the response headers, this is not the body of the request
    */
@@ -182,12 +191,13 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
 
   /**
    * Makes a simple and fast POST request using Java's HTTP Client.
-   * @param url URL for making the POST request.
-   * @param data The data / body used for the POST request.
+   *
+   * @param url     URL for making the POST request.
+   * @param data    The data / body used for the POST request.
    * @param headers Headers for indicating content type or etc.
    * @return Written output from the POST request, most POST requests will have some type of output.
    */
-  def post(url: String = this.url, data: String = null, headers: Iterable[(String, String)] = Nil, version: String = HttpClient.Version.HTTP_2.toString): String = {
+  def post(url: String = this.url, data: String = new String(), headers: Iterable[(String, String)] = Nil, version: String = HttpClient.Version.HTTP_2.toString): String = {
     val client: HttpClient = HttpClient.newBuilder()
       .version(HttpClient.Version.valueOf(version.toUpperCase))
       .build()
@@ -208,17 +218,14 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
 
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
-   * @param url Provide an URL
+   *
+   * @param url     Provide an URL
    * @param version Provide an optional HTTP version, HTTP_2 or HTTP_1_1 are valid
-   * @param timeout Optional timeout
    * @return Map of the response headers with the options
    */
-  def options(url: String = this.url, version: String = HttpClient.Version.HTTP_2.toString, timeout: Int = 5000): Map[String, List[String]] = {
-    val optionHeaders: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
-
+  def options(url: String = this.url, version: String = HttpClient.Version.HTTP_2.toString): Map[String, List[String]] = {
     val client: HttpClient = HttpClient.newBuilder()
       .version(HttpClient.Version.valueOf(version.toUpperCase))
-      .connectTimeout(Duration.ofMillis(timeout))
       .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
@@ -228,15 +235,13 @@ class Request(var url: String = "", var method: String = Constants.GET, headers:
     val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
 
     val responseHeaders = response.headers().map()
-    responseHeaders.forEach((k, v) => {
-      optionHeaders.put(k, v.asScala.toList)
-    })
-
-    optionHeaders.asScala.toMap
+    val optionHeaders: Map[String, List[String]] = Map("Allow" -> responseHeaders.get("Allow").asScala.toList)
+    optionHeaders
   }
 
   /**
    * Amends headers from a Map containing a String key and List[String] value into a neat and organized string
+   *
    * @param map Map with the String and List with Strings
    * @return String
    */
