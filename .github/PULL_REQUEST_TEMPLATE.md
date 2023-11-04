@@ -3,7 +3,7 @@
 Please summarize your changes, with relevant context. Be sure to also state whether it fixes an issue or not. If no issues were fixed, there is no need to fill out the field.
 (Note: This is not a full PR template, but it serves its purpose).
 
-#### Issues Fixed
+#### Issues Addressed
 [Fill in this field if any]
 
 
