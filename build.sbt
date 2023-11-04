@@ -1,15 +1,15 @@
 name := "Kukoshi"
 
-version := "1.0.0"
+version := "2.0.0"
 
-scalaVersion := "2.13.6"
+scalaVersion := "3.2.2"
 
 organization := "org.kukoshi"
 
 versionScheme := Some("semver-spec")
 
 homepage := Some(url("https://github.com/KiyonoKara/Kukoshi"))
-licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
+licenses := Seq("Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 publishMavenStyle := true
 pomIncludeRepository := { _ => false }
 
