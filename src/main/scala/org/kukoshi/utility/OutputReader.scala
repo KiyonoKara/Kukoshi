@@ -2,8 +2,7 @@ package org.kukoshi.utility
 
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
-import java.util.zip.{InflaterInputStream, GZIPInputStream}
-import scala.collection.mutable.{StringBuilder => StrBuilder}
+import java.util.zip.{GZIPInputStream, InflaterInputStream}
 
 object OutputReader {
   /**
@@ -31,7 +30,7 @@ object OutputReader {
 
     // String Builder to add to the final string
     // StringBuilder => StrBuilder
-    val stringBuilder: StrBuilder = new StrBuilder()
+    val stringBuilder: StringBuilder = new StringBuilder()
 
     // Appending the data to a String Builder
     while (ch != -1) {
