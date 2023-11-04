@@ -12,7 +12,7 @@ Please summarize your changes, with relevant context. Be sure to also state whet
 Please select the options that are relevant to your pull request.
 
 - [ ] Bug fix
-- [ ] New feature
+- [ ] New feature(s)
 - [ ] Breaking change
 - [ ] This change requires a documentation update
 
