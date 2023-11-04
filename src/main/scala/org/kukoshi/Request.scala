@@ -248,7 +248,7 @@ class Request(var url: String = "",
   def amend(map: Map[String, List[String]]): String = {
     var str: String = new String()
     map.foreach(entry => {
-      str += "%s: %s%n".format(entry._1, entry._2)
+      str += "%s: %s%n".format(entry._1, entry._2.mkString(","))
     })
     str
   }
