@@ -74,6 +74,7 @@ object Utility {
 
   /**
    * HTTP-related constants
+   * Import example
    * {{{
    *   import org.kukoshi.Utility.Constants
    *   val GET: String = Constants.GET
