@@ -19,7 +19,7 @@ object Utility {
   }
 
   /**
-   * Creates an URL from a supplied base URL 
+   * Creates an URL from a supplied base URL
    * then uses provided url parameters provided as an iterable collection of 2-element tuples
    * @param url           URL string
    * @param urlParameters URL parameters
@@ -47,16 +47,8 @@ object Utility {
 
   /**
    * HTTP-related constants
-   * Import example
-   * {{{
-   *   import org.kukoshi.Utility.Constants
-   *   val GET: String = Constants.GET
-   * }}}
    */
   object Constants {
-    /**
-     * Main HTTP/HTTPS methods
-     */
     val GET: String = "GET"
     val POST: String = "POST"
     val DELETE: String = "DELETE"
