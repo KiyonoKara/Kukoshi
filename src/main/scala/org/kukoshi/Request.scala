@@ -5,42 +5,28 @@ package org.kukoshi
  * File Request.scala
  */
 
-// Networking and web
-
-import java.net.{HttpURLConnection, URI, URL}
-
-// Java HTTP
-import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
-
-// IO & NIO
-import java.io.{InputStream, OutputStream}
-import java.nio.charset.StandardCharsets
-
-// Scala IO Source
-import scala.io.Source.fromInputStream
-
-// Local utilities
 import org.kukoshi.utility.Utility.Constants
 import org.kukoshi.utility.{OutputReader, Utility}
 
-// Other
+import java.io.{InputStream, OutputStream}
 import java.lang.reflect.Field
+import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
+import java.net.{HttpURLConnection, URI, URL}
+import java.nio.charset.StandardCharsets
 import java.util
-import scala.jdk.CollectionConverters._
+import scala.io.Source.fromInputStream
+import scala.jdk.CollectionConverters.*
 
 /**
- * Main class for making HTTP/HTTPS requests
- *
- * @param url     String; Provide an URL with its path (if you are requesting with the path)
- * @param method  String; Request method, refer to the Constants file for supported methods
- * @param headers Iterable[(String, String)]; Headers in the form of a Map collection is primarily valid
+ * Main class for HTTP/HTTPS requests
+ * @param url     URL string
+ * @param method  Request method
+ * @param headers Request headers as an iterable collection of 2-element tuples
  */
-class Request(var url: String = "",
-              var method: String = Constants.GET,
-              headers: Iterable[(String, String)] = Map(
+class Request(var url: String = new String(), var method: String = Constants.GET, headers: Iterable[(String, String)] = Map(
                 "Accept-Encoding" -> "gzip, deflate",
-                "Connection" -> "keep-alive")
-             ) {
+                "Connection" -> "keep-alive")) {
+
   private lazy val methodField: Field = {
     val method = classOf[HttpURLConnection].getDeclaredField("method")
     method.setAccessible(true)
@@ -49,14 +35,13 @@ class Request(var url: String = "",
 
 
   /**
-   * The request method for the class that completes the HTTP/HTTPS requests
-   *
-   * @param url        String; Provide an URL
-   * @param method     String; Request method, defaults to the class' default method
-   * @param headers    Iterable[(String, String)]; Headers for requesting
-   * @param data       String; Preferably JSON data that is in the form of a string
-   * @param parameters Iterable[(String, String)]; URL parameters that can be used for querying
-   * @return Output as a string
+   * The request method for doing HTTP/HTTPS requests
+   * @param url        URL string
+   * @param method     HTTP request method
+   * @param headers    Iterable[(String, String)], request headers
+   * @param data       Data to pass into the request body
+   * @param parameters URL parameters for querying
+   * @return Request's output as a string
    */
   def request(url: String = this.url, method: String = this.method, headers: Iterable[(String, String)] = this.headers, data: String = null, parameters: Iterable[(String, String)] = Nil): String = {
     // Parse the URL along with the parameters
@@ -72,7 +57,6 @@ class Request(var url: String = "",
     } else {
       /** For PATCH requests, the method will default to POST.
        * PATCH requests can still be done with X-HTTP-Method-Override header that changes the request method.
-       *
        * Example for adding the PATCH override:
        * {{{
        *   val PATCH: String = new Request().request("http://localhost:8080/echo",
@@ -116,10 +100,9 @@ class Request(var url: String = "",
 
   /**
    * Writes to a request
-   *
-   * @param connection HttpURLConnection; The connection established will be used so it can be written to.
-   * @param method     A method is always required, cannot default to a common request method
-   * @param data       Preferably JSON data in the form of a string.
+   * @param connection HttpURLConnection, connection to be established
+   * @param method     HTTP method, defaults to GET
+   * @param data       Data to be written
    * @return output Generally returns the output of the Output Reader
    */
   private def writeToRequest(connection: HttpURLConnection, method: String, data: String): String = {
@@ -163,10 +146,9 @@ class Request(var url: String = "",
   }
 
   /**
-   * Creates a HEAD request that gets the headers of the response, there is no body from HEAD requests nor its responses.
-   *
-   * @param url Provide an URL for making the HEAD request
-   * @return A Map with all the response headers, this is not the body of the request
+   * Creates a HEAD request, there is no written body from HEAD requests
+   * @param url URL string
+   * @return Map with all response headers
    */
   def head(url: String = this.url): Map[String, List[String]] = {
     val headers: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
@@ -186,11 +168,10 @@ class Request(var url: String = "",
 
   /**
    * Makes a simple and fast POST request using Java's HTTP Client.
-   *
-   * @param url     URL for making the POST request.
-   * @param data    The data / body used for the POST request.
-   * @param headers Headers for indicating content type or etc.
-   * @return Written output from the POST request, most POST requests will have some type of output.
+   * @param url     Target URL for POST request.
+   * @param data    The data / body used to send.
+   * @param headers Headers as an iterable collection with 2-element tuples
+   * @return Written output (if any) from the POST request
    */
   def post(url: String = this.url, data: String = new String(), headers: Iterable[(String, String)] = Nil, version: String = HttpClient.Version.HTTP_2.toString): String = {
     val client: HttpClient = HttpClient.newBuilder()
@@ -198,7 +179,7 @@ class Request(var url: String = "",
       .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
-      .POST(HttpRequest.BodyPublishers.ofString(if (data == null) return new StringBuilder().toString() else data))
+      .POST(HttpRequest.BodyPublishers.ofString(data))
       .uri(URI.create(url))
 
     if (headers.nonEmpty) {
@@ -213,7 +194,6 @@ class Request(var url: String = "",
 
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
-   *
    * @param url     Provide an URL
    * @param version Provide an optional HTTP version, HTTP_2 or HTTP_1_1 are valid
    * @return Map of the response headers with the options
