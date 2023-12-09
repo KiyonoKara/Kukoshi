@@ -56,10 +56,8 @@ object Utility {
     val HEAD: String = "HEAD"
     val OPTIONS: String = "OPTIONS"
     val PATCH: String = "PATCH"
-
-    /**
-     * Officially supported methods
-     */
+    
+    // Methods the library supports
     val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
   }
 }
