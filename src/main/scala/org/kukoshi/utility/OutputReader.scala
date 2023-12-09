@@ -6,8 +6,7 @@ import java.util.zip.{GZIPInputStream, InflaterInputStream}
 
 object OutputReader {
   /**
-   * Reads output of a connection established via the HttpURLConnection class
-   *
+   * Reads output of a connection established from HttpURLConnection
    * @param connection HttpURLConnection
    * @return Data as a String
    */
@@ -21,24 +20,20 @@ object OutputReader {
       connection.getContentEncoding match {
         case "gzip" => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
         case "deflate" => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
-        case _ => reader = new InputStreamReader(connection.getInputStream)
       }
     }
 
     // Empty char value
     var ch: Int = 0
-
-    // String Builder to add to the final string
-    // StringBuilder => StrBuilder
     val stringBuilder: StringBuilder = new StringBuilder()
 
-    // Appending the data to a String Builder
+    // Appends each character from the data to the StringBuilder
     while (ch != -1) {
       ch = reader.read()
       if (ch == -1) {
         return stringBuilder.toString()
       }
-      stringBuilder.append(ch.asInstanceOf[Char]).toString
+      stringBuilder.append(ch.toChar).toString
     }
     stringBuilder.toString
   }
