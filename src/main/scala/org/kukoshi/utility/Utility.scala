@@ -2,30 +2,31 @@ package org.kukoshi.utility
 
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
 
+/**
+ * Utility class
+ */
 object Utility {
   /**
-   * Encodes URL parameters for queries
-   *
-   * @param str URL parameters as an iterable collection
-   * @return String with the URL parameters in the URL format
+   * Creates string of URL parameters
+   * @param urlParameters URL parameters as an iterable collection
+   * @return Formatted URL parameters
    */
-  private def encodeURLParameters(str: Iterable[(String, String)]): String = {
-    str.map({
+  private def encodeURLParameters(urlParameters: Iterable[(String, String)]): String = {
+    urlParameters.map({
       case (k, v) =>
         s"""${URLEncoder.encode(k, "UTF-8")}=${URLEncoder.encode(v, "UTF-8")}"""
     }).mkString("&")
   }
 
   /**
-   * Creates an URL with a method-based approach by using an URL and taking parameters in the form of an iterable collection.
-   *
-   * @param url           String with the URL
+   * Creates an URL from a supplied base URL 
+   * then uses provided url parameters provided as an iterable collection of 2-element tuples
+   * @param url           URL string
    * @param urlParameters URL parameters
-   * @return Completed URL with the parameters
+   * @return Complete URL with the parameters
    */
-  def createURL(url: String, urlParameters: Iterable[(String, String)] = Nil): String = {
+  def createURL(url: String, urlParameters: Iterable[(String, String)]): String = {
     val newURL: URL = new URL(new URI(url).toASCIIString)
-    if (urlParameters == Nil) return s"""$newURL"""
     val separator: String = if (newURL.getQuery != null) "&" else "?"
     val encodedURLParameters: String = Utility.encodeURLParameters(urlParameters)
     s"""$newURL$separator$encodedURLParameters"""
@@ -33,7 +34,6 @@ object Utility {
 
   /**
    * Gets a map key by its value
-   *
    * @param map   Collection map
    * @param value Value of the key
    * @return Key name
