@@ -3,6 +3,7 @@ package org.kukoshi.utility
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
+import scala.jdk.CollectionConverters._
 
 object OutputReader {
   /**
@@ -15,11 +16,18 @@ object OutputReader {
     // Set the reader to a null value before reading the output
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
+    val headerFields = connection.getHeaderFields.asScala
+      .filter(_._1 != null)
+      .map((k, v) => (k.toLowerCase, v.asScala.toList))
+
     // GZIP & Deflate data streaming
-    if (connection.getHeaderFields.containsKey("Content-Encoding")) {
-      connection.getContentEncoding match {
-        case "gzip" => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
-        case "deflate" => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
+    // Deprecated: connection.getHeaderFields.containsKey("Content-Encoding")
+    if (headerFields.getOrElse("content-encoding", List.empty).nonEmpty) {
+      val co_en = headerFields.get("content-encoding").toSeq.flatten
+      co_en match {
+        case gzip if gzip.contains("gzip") => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
+        case deflate if deflate.contains("deflate") => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
+        case _ => ()
       }
     }
 
