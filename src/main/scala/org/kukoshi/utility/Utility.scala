@@ -32,19 +32,6 @@ object Utility {
     s"""$newURL$separator$encodedURLParameters"""
   }
 
-  def setHeaders(connection: HttpURLConnection, headers: Iterable[(String, String)] = Nil): Unit = {
-    if (headers.nonEmpty) {
-      headers foreach {
-        case (key, value) =>
-          try {
-            connection.setRequestProperty(key, value)
-          } catch {
-            case _: Any => ()
-          }
-      }
-    }
-  }
-
   /**
    * HTTP-related constants
    */
