@@ -8,8 +8,8 @@ package org.kukoshi
 import org.kukoshi.utility.Utility.Constants
 import org.kukoshi.utility.{OutputReader, Utility}
 
-import java.io.{InputStream, OutputStream}
-import java.lang.reflect.Field
+import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
+import java.lang.reflect.{Field, Modifier}
 import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
 import java.net.{HttpURLConnection, URI, URL}
 import java.nio.charset.StandardCharsets
@@ -22,17 +22,20 @@ import scala.jdk.CollectionConverters.*
  * @param url     URL string
  * @param method  Request method
  * @param headers Request headers as an iterable collection of 2-element tuples
+ * @param readTimeout Max timeout for reading the request
+ * @param connectTimeout Max timeout for connecting
  */
 class Request(var url: String = new String(), var method: String = Constants.GET, headers: Iterable[(String, String)] = Map(
                 "Accept-Encoding" -> "gzip, deflate",
-                "Connection" -> "keep-alive")) {
+                "Connection" -> "keep-alive"),
+                readTimeout: Int = 15 * 1000,
+                connectTimeout: Int = 15 * 1000) {
 
   private lazy val methodField: Field = {
-    val method = classOf[HttpURLConnection].getDeclaredField("method")
+    val method: Field = classOf[HttpURLConnection].getDeclaredField("method")
     method.setAccessible(true)
     method
   }
-
 
   /**
    * The request method for doing HTTP/HTTPS requests
@@ -41,9 +44,20 @@ class Request(var url: String = new String(), var method: String = Constants.GET
    * @param headers    Iterable[(String, String)], request headers
    * @param data       Data to pass into the request body
    * @param parameters URL parameters for querying
-   * @return Request's output as a string
+   * @param readTimeout Max timeout for reading the request
+   * @param connectTimeout Max timeout for connecting
+   * @return Request output as a string
    */
-  def request(url: String = this.url, method: String = this.method, headers: Iterable[(String, String)] = this.headers, data: String = null, parameters: Iterable[(String, String)] = Nil): String = {
+  def request(url: String = this.url,
+              method: String = this.method,
+              headers: Iterable[(String, String)] = this.headers,
+              data: String = new String(),
+              parameters: Iterable[(String, String)] = Iterable.empty[(String, String)],
+              readTimeout: Int = this.readTimeout,
+              connectTimeout: Int = this.connectTimeout): String = {
+    // Set method to uppercase
+    val methodUpperCase = method.toUpperCase()
+
     // Parse the URL along with the parameters
     val requestURL: String = Utility.createURL(url, parameters)
     val parsedURL: URL = new URL(requestURL)
@@ -51,98 +65,101 @@ class Request(var url: String = new String(), var method: String = Constants.GET
     // Create the connection from the provided URL
     val connection: HttpURLConnection = parsedURL.openConnection.asInstanceOf[HttpURLConnection]
 
+    connection.setReadTimeout(connectTimeout)
+    connection.setConnectTimeout(connectTimeout)
+    connection.setUseCaches(false)
+    connection.setDoOutput(true)
+
     // Set the request method
-    if (Constants.HTTPMethods.contains(method.toUpperCase)) {
-      connection.setRequestMethod(method.toUpperCase)
+    if (Constants.HTTPMethods.contains(methodUpperCase)) {
+      connection.setRequestMethod(methodUpperCase)
     } else {
-      /** For PATCH requests, the method will default to POST.
-       * PATCH requests can still be done with X-HTTP-Method-Override header that changes the request method.
-       * Example for adding the PATCH override:
-       * {{{
-       *   val PATCH: String = new Request().request("http://localhost:8080/echo",
-       *                                         "PATCH", Map("Accept" -> "*",
-       *                                         "User-Agent" -> "*",
-       *                                         "X-HTTP-Method-Override" -> "PATCH"),
-       *                                         data = "{\"message\": \"PATCH message\"}")
-       * }}}
-       *
-       */
+      // For methods not supported by HttpURLConnection
       connection match {
         case httpURLConnection: HttpURLConnection =>
-          httpURLConnection.getClass.getDeclaredFields.find(_.getName == "delegate") foreach { i =>
-            i.setAccessible(true)
-            this.methodField.set(i.get(httpURLConnection), method.toUpperCase)
+          httpURLConnection.getClass.getDeclaredFields.find(_.getName == "delegate") foreach { delegate =>
+            delegate.setAccessible(true)
+            this.methodField.set(delegate.get(httpURLConnection), methodUpperCase)
           }
       }
     }
 
     // Sets headers
-    if (headers.nonEmpty) {
-      Utility.setHeaders(connection, headers)
+    for ((k, v) <- headers) connection.setRequestProperty(k, v)
+
+    // The content
+    val content: StringBuilder = new StringBuilder()
+
+    // Methods that write to the requests
+    val writeableMethods: Set[String] = Set(Constants.POST, Constants.DELETE, Constants.PUT, Constants.PATCH)
+
+    if (methodUpperCase.equals(Constants.GET)) {
+      content.append(OutputReader.read(connection))
+      connection.getInputStream.close()
+      return content.toString
+    } else if (writeableMethods.contains(methodUpperCase)) {
+      content.append(OutputReader.read(connection))
+      return this.writeToRequest(connection, data)
     }
 
-    if (method.toUpperCase.equals(Constants.GET)) {
-      return OutputReader.read(connection)
-    }
-
-    if (method.toUpperCase.equals(Constants.POST) || method.toUpperCase.equals(Constants.DELETE) || method.toUpperCase.equals(Constants.PUT) || method.toUpperCase.equals(Constants.PATCH)) {
-      return this.writeToRequest(connection, method, data)
-    }
-
-    // Input stream for data with a GET request if all of the requests fail
+    // In case everything fails
     val inputStream = connection.getInputStream
-    val content = fromInputStream(inputStream).mkString
+    content.clear()
+    content.append(fromInputStream(inputStream).mkString)
     if (inputStream != null) inputStream.close()
-    // Return the content or data, read-only
-    content
+    // Return content
+    content.toString()
   }
 
 
   /**
    * Writes to a request
-   * @param connection HttpURLConnection, connection to be established
-   * @param method     HTTP method, defaults to GET
-   * @param data       Data to be written
-   * @return output Generally returns the output of the Output Reader
+   * @param connection HttpURLConnection, existing connection
+   * @param data       Data or body to write to the request
+   * @return Request output
    */
-  private def writeToRequest(connection: HttpURLConnection, method: String, data: String): String = {
-    val theMethod: String = method.toUpperCase
-    if (theMethod.equals(Constants.POST) || theMethod.equals(Constants.PUT) || theMethod.equals(Constants.PATCH)) connection.setDoOutput(true)
-
-    // Processing the data
+  private def writeToRequest(connection: HttpURLConnection, data: String): String = {
+    // Check data
     if (data.isEmpty) {
       val inputStream: InputStream = connection.getInputStream
       val content: String = fromInputStream(inputStream).mkString
       inputStream.close()
       return content
     }
-    val byte: Array[Byte] = data.getBytes(StandardCharsets.UTF_8)
-    val length: Int = byte.length
-    connection.setFixedLengthStreamingMode(length)
+    
+    // Put byte into output stream
+    val byteArrayOutputStream: ByteArrayOutputStream = new ByteArrayOutputStream()
+    val dataBytes: Array[Byte] = data.getBytes(StandardCharsets.UTF_8)
+    byteArrayOutputStream.write(dataBytes, 0, dataBytes.length)
+    
+    // Turn byte array output stream into a byte array
+    val byteArray: Array[Byte] = byteArrayOutputStream.toByteArray
+    connection.setFixedLengthStreamingMode(byteArray.length)
 
+    var content: String = new String()
     try {
       // Write to the request
-      val outputStream: OutputStream = connection.getOutputStream
-      outputStream.write(byte, 0, byte.length)
-      if (theMethod.equals(Constants.POST)) {
-        outputStream.flush()
-        outputStream.close()
-      }
+      val outputStream: DataOutputStream = new DataOutputStream(connection.getOutputStream)
+      outputStream.write(byteArray, 0, byteArray.length)
+      outputStream.flush()
+      outputStream.close()
+
       // Get output of request
-      val inputStream: InputStream = connection.getInputStream
-      if (connection.getContentEncoding != null && connection.getContentEncoding.nonEmpty) {
-        val content: String = OutputReader.read(connection)
-        content
+      if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
+        content = OutputReader.read(connection)
       } else {
-        val content: String = fromInputStream(inputStream).mkString
+        val inputStream: InputStream = connection.getInputStream
+        content = fromInputStream(inputStream).mkString
         inputStream.close()
-        content
       }
     } catch {
       case error: Error =>
         error.printStackTrace()
         error.toString
+    } finally {
+      connection.disconnect()
     }
+    content
   }
 
   /**
@@ -173,7 +190,10 @@ class Request(var url: String = new String(), var method: String = Constants.GET
    * @param headers Headers as an iterable collection with 2-element tuples
    * @return Written output (if any) from the POST request
    */
-  def post(url: String = this.url, data: String = new String(), headers: Iterable[(String, String)] = Nil, version: String = HttpClient.Version.HTTP_2.toString): String = {
+  def post(url: String = this.url,
+           data: String = new String(),
+           headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
+           version: String = HttpClient.Version.HTTP_2.toString): String = {
     val client: HttpClient = HttpClient.newBuilder()
       .version(HttpClient.Version.valueOf(version.toUpperCase))
       .build()
