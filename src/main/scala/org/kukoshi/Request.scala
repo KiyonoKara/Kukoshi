@@ -126,12 +126,12 @@ class Request(var url: String = new String(), var method: String = Constants.GET
       inputStream.close()
       return content
     }
-    
+
     // Put byte into output stream
     val byteArrayOutputStream: ByteArrayOutputStream = new ByteArrayOutputStream()
     val dataBytes: Array[Byte] = data.getBytes(StandardCharsets.UTF_8)
     byteArrayOutputStream.write(dataBytes, 0, dataBytes.length)
-    
+
     // Turn byte array output stream into a byte array
     val byteArray: Array[Byte] = byteArrayOutputStream.toByteArray
     connection.setFixedLengthStreamingMode(byteArray.length)
