@@ -1,5 +1,10 @@
 package org.kukoshi.utility
 
+/**
+ * Created by KiyonoKara - 2021/08/19
+ * File OutputReader.scala
+ */
+
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}

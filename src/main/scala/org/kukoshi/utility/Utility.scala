@@ -1,5 +1,10 @@
 package org.kukoshi.utility
 
+/**
+ * Created by KiyonoKara - 2021/08/19
+ * File Utility.scala
+ */
+
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
 
 /**
