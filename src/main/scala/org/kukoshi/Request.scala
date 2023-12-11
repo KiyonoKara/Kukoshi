@@ -1,7 +1,7 @@
 package org.kukoshi
 
 /**
- * Created by KiyonoKara - 08/19/2021
+ * Created by KiyonoKara - 2021/08/19
  * File Request.scala
  */
 
