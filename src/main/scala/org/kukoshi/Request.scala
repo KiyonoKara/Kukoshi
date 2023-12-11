@@ -233,17 +233,4 @@ class Request(var url: String = new String(), var method: String = Constants.GET
     val optionHeaders: Map[String, List[String]] = Map("Allow" -> responseHeaders.get("Allow").asScala.toList)
     optionHeaders
   }
-
-  /**
-   * Amends data from a Scala Map containing a String key and List[String] value into a string
-   * @param map Map with the String and List of Strings
-   * @return String
-   */
-  def amend(map: Map[String, List[String]]): String = {
-    val strBuilder: StringBuilder = new StringBuilder()
-    map.foreach(entry => {
-      strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
-    })
-    strBuilder.toString
-  }
 }
