@@ -33,6 +33,19 @@ object Utility {
   }
 
   /**
+   * Amends data from a Scala Map containing a String key and List[String] value into a string
+   * @param map Map with the String and List of Strings
+   * @return String
+   */
+  def amend(map: Map[String, List[String]]): String = {
+    val strBuilder: StringBuilder = new StringBuilder()
+    map.foreach(entry => {
+      strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
+    })
+    strBuilder.toString
+  }
+
+  /**
    * HTTP-related constants
    */
   object Constants {
