@@ -13,9 +13,10 @@ object OutputReader {
    */
   def read(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
-    // Set the reader to a null value before reading the output
+    // Set reader to the connection's original input stream
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
+    // Get all headers and set all to lowercase
     val headerFields = connection.getHeaderFields.asScala
       .filter(_._1 != null)
       .map((k, v) => (k.toLowerCase, v.asScala.toList))
@@ -31,7 +32,7 @@ object OutputReader {
       }
     }
 
-    // Empty char value
+    // Start with empty char value
     var ch: Int = 0
     val stringBuilder: StringBuilder = new StringBuilder()
 
