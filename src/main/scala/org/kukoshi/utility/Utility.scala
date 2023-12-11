@@ -39,9 +39,9 @@ object Utility {
    */
   def amend(map: Map[String, List[String]]): String = {
     val strBuilder: StringBuilder = new StringBuilder()
-    map.foreach(entry => {
+    map.foreach(entry =>
       strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
-    })
+    )
     strBuilder.toString
   }
 
