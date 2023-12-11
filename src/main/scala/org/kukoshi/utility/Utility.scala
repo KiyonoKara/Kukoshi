@@ -3,7 +3,7 @@ package org.kukoshi.utility
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
 
 /**
- * Utility class
+ * Utility object
  */
 object Utility {
   /**
