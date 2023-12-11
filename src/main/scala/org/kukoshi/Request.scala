@@ -240,10 +240,10 @@ class Request(var url: String = new String(), var method: String = Constants.GET
    * @return String
    */
   def amend(map: Map[String, List[String]]): String = {
-    var str: String = new String()
+    val strBuilder: StringBuilder = new StringBuilder()
     map.foreach(entry => {
-      str += "%s: %s%n".format(entry._1, entry._2.mkString(","))
+      strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
     })
-    str
+    strBuilder.toString
   }
 }
