@@ -235,9 +235,8 @@ class Request(var url: String = new String(), var method: String = Constants.GET
   }
 
   /**
-   * Amends headers from a Map containing a String key and List[String] value into a neat and organized string
-   *
-   * @param map Map with the String and List with Strings
+   * Amends data from a Scala Map containing a String key and List[String] value into a string
+   * @param map Map with the String and List of Strings
    * @return String
    */
   def amend(map: Map[String, List[String]]): String = {
