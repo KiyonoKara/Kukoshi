@@ -11,6 +11,8 @@ organization := "org.kukoshi"
 
 versionScheme := Some("semver-spec")
 
+startYear := Some(2021)
+
 homepage := Some(url(f"https://github.com/$maintainer/$packageName"))
 licenses := Seq("Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 publishMavenStyle := true
