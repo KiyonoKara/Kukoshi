@@ -1,4 +1,4 @@
-package org.kukoshi.utility
+package org.kukoshi
 
 /**
  * Created by KiyonoKara - 2021/08/19
