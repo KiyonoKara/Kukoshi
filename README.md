@@ -14,7 +14,7 @@
 Kukoshi, is a Scala library made for making HTTP / HTTPS requests.
 
 ## Overview
-Kukoshi wraps built-in Java libraries / modules such as `HttpURLConnection` and classes from `java.net`'s suite. This Scala library gets assistance for input streams from `scala.io.Source`, a built-in object with convenience methods.
+Kukoshi makes HTTP-based interactions simpler. This client doesn't require a boilerplate set-up or a blend of imports.
 
 ## Features
 - GZIP and Deflate support for compressed responses and data. 
