@@ -13,7 +13,7 @@
 
 「Kukoshi」は、HTTPとHTTPSのリクエストを作るScalaライブラリーです。
 ## 纏め
-Kukoshiは、`HttpURLConnection`や`java.net.http._`のクラス、主に`HttpClient`などの、組み込みのJavaライブラリ/モジュールをラップしています。このScalaライブラリは、`scala.io.Source`という便利なメソッドを持つ組み込みオブジェクトから、入力ストリームの支援を得ています。
+KukoshiはHTTPリクエストの利用を簡単になります。このクライアントはボイラプレートのセッティングや色々なインポートが不必要です。
 
 ## 機能
 - 圧縮されたデータは、GZIPとDeflateがサポートされている。
