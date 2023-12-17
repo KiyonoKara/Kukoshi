@@ -1,4 +1,4 @@
-package org.kukoshi.utility
+package org.kukoshi
 
 /**
  * Created by KiyonoKara - 2021/08/19
@@ -8,7 +8,7 @@ package org.kukoshi.utility
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 protected object OutputReader {
   /**
