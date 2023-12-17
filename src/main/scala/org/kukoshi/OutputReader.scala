@@ -8,7 +8,7 @@ package org.kukoshi
 import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters._
 
 protected object OutputReader {
   /**
