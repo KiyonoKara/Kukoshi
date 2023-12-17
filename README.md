@@ -25,8 +25,7 @@ Kukoshi makes HTTP-based interactions simpler. This client doesn't require a boi
   - No external dependencies required.
   - Defaults to GET requests.
   - `head` and `options` for header-based requests.
-  - `amend()` neatly formats results from `head()` function or data of `Map[String, List[String]]` type.
-  - Extra utilities from the `Utility` object.
+
 
 ## Installation
 ### Main (Preferred) Installation 
