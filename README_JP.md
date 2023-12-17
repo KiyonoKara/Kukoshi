@@ -24,8 +24,6 @@ KukoshiはHTTPリクエストの利用を簡単になります。このクライ
     - 外部Library不要
     - デフォルト：GET.
     - Headerに基づくRequest`head`か`options`
-    - `amend()`は`head()`のデータから`Map[String, List[String]]`型のデータをきれいに整形される。
-    - `Utility`オブジェクトの追加ユーティリティ有り。
 
 ## Installation 
 #### MAIN方法 
