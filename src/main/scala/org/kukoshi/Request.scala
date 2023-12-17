@@ -5,8 +5,7 @@ package org.kukoshi
  * File Request.scala
  */
 
-import org.kukoshi.utility.Utility.Constants
-import org.kukoshi.utility.{OutputReader, Utility}
+import org.kukoshi.Utility.Constants
 
 import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
