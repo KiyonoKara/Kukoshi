@@ -10,7 +10,7 @@ import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
 import scala.jdk.CollectionConverters._
 
-object OutputReader {
+protected object OutputReader {
   /**
    * Reads output of a connection established from HttpURLConnection
    * @param connection HttpURLConnection
