@@ -22,9 +22,9 @@ protected object OutputReader {
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
     // Get all headers and set all to lowercase
-    val headerFields = connection.getHeaderFields.asScala
+    val headerFields: Map[String, List[String]] = connection.getHeaderFields.asScala
       .filter(_._1 != null)
-      .map((k, v) => (k.toLowerCase, v.asScala.toList))
+      .map((k, v) => (k.toLowerCase, v.asScala.toList)).toMap
 
     // GZIP & Deflate data streaming
     // Deprecated: connection.getHeaderFields.containsKey("Content-Encoding")
