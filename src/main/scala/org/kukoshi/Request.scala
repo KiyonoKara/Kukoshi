@@ -14,7 +14,7 @@ import java.net.{HttpURLConnection, URI, URL}
 import java.nio.charset.StandardCharsets
 import java.util
 import scala.io.Source.fromInputStream
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters._
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -229,7 +229,6 @@ class Request(var url: String = new String(), var method: String = Constants.GET
     val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
 
     val responseHeaders = response.headers().map()
-    val optionHeaders: Map[String, List[String]] = Map("Allow" -> responseHeaders.get("Allow").asScala.toList)
-    optionHeaders
+    responseHeaders.asScala.view.map((k, v) => (k, v.asScala.toList)).toMap
   }
 }
