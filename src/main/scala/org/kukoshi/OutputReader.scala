@@ -9,6 +9,7 @@ import java.io.{InputStream, InputStreamReader, Reader}
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
 import scala.jdk.CollectionConverters._
+import scala.collection.mutable
 
 protected object OutputReader {
   /**
@@ -22,9 +23,9 @@ protected object OutputReader {
     var reader: Reader = new InputStreamReader(connection.getInputStream)
 
     // Get all headers and set all to lowercase
-    val headerFields: Map[String, List[String]] = connection.getHeaderFields.asScala
+    val headerFields: mutable.Map[String, List[String]] = connection.getHeaderFields.asScala
       .filter(_._1 != null)
-      .map((k, v) => (k.toLowerCase, v.asScala.toList)).toMap
+      .map((k, v) => (k.toLowerCase, v.asScala.toList))
 
     // GZIP & Deflate data streaming
     // Deprecated: connection.getHeaderFields.containsKey("Content-Encoding")
