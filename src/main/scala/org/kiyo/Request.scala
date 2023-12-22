@@ -76,10 +76,9 @@ class Request(var url: String = new String(), var method: String = Constants.GET
       // For methods not supported by HttpURLConnection
       connection match {
         case httpURLConnection: HttpURLConnection =>
-          httpURLConnection.getClass.getDeclaredFields.find(_.getName == "delegate") foreach { delegate =>
+          httpURLConnection.getClass.getDeclaredFields.find(_.getName == "delegate").foreach(delegate =>
             delegate.setAccessible(true)
-            this.methodField.set(delegate.get(httpURLConnection), methodUpperCase)
-          }
+            this.methodField.set(delegate.get(httpURLConnection), methodUpperCase))
       }
     }
 
