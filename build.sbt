@@ -18,8 +18,8 @@ ThisBuild / pomIncludeRepository := { _ => false }
 
 ThisBuild / publishTo := Some(f"GitHub $maintainer Apache Maven Packages" at f"https://maven.pkg.github.com/$maintainer/$packageName")
 ThisBuild / credentials += Credentials(
-  "GitHub Package Registry",
-  "maven.pkg.github.com",
+  realm = "GitHub Package Registry",
+  host = "maven.pkg.github.com",
   maintainer,
   sys.env.getOrElse("GITHUB_TOKEN", "")
 )
