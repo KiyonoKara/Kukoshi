@@ -59,7 +59,7 @@ class Request(var url: String = new String(), var method: String = Constants.GET
 
     // Parse the URL along with the parameters
     val requestURL: String = Utility.createURL(url, parameters)
-    val parsedURL: URL = new URL(requestURL)
+    val parsedURL: URL = URI.create(requestURL).toURL
 
     // Create the connection from the provided URL
     val connection: HttpURLConnection = parsedURL.openConnection.asInstanceOf[HttpURLConnection]
