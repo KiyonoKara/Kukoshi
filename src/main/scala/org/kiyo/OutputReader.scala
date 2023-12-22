@@ -5,11 +5,11 @@ package org.kiyo
  * File OutputReader.scala
  */
 
-import java.io.{InputStream, InputStreamReader, Reader}
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
-import scala.jdk.CollectionConverters._
 import scala.collection.mutable
+import scala.jdk.CollectionConverters.*
 
 protected object OutputReader {
   /**
@@ -19,8 +19,7 @@ protected object OutputReader {
    */
   def read(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
-    // Set reader to the connection's original input stream
-    var reader: Reader = new InputStreamReader(connection.getInputStream)
+    var reader: InputStream = connectionInputStream
 
     // Get all headers and set all to lowercase
     val headerFields: mutable.Map[String, List[String]] = connection.getHeaderFields.asScala
@@ -32,8 +31,8 @@ protected object OutputReader {
     if (headerFields.getOrElse("content-encoding", List.empty).nonEmpty) {
       val co_en = headerFields.get("content-encoding").toSeq.flatten
       co_en match {
-        case gzip if gzip.contains("gzip") => reader = new InputStreamReader(new GZIPInputStream(connectionInputStream))
-        case deflate if deflate.contains("deflate") => reader = new InputStreamReader(new InflaterInputStream(connectionInputStream))
+        case gzip if gzip.contains("gzip") => reader = new GZIPInputStream(connectionInputStream)
+        case deflate if deflate.contains("deflate") => reader = new InflaterInputStream(connectionInputStream)
         case _ => ()
       }
     }
