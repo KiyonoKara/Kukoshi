@@ -45,10 +45,7 @@ protected object OutputReader {
     // Appends each character from the data to the StringBuilder
     while (ch != -1) {
       ch = reader.read()
-      if (ch == -1) {
-        return stringBuilder.toString()
-      }
-      stringBuilder.append(ch.toChar).toString
+      stringBuilder.append(ch.toChar)
     }
     stringBuilder.toString
   }
