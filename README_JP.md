@@ -37,7 +37,7 @@ credentials += Credentials(
 )
 
 resolvers += "GitHub Package Registry (KiyonoKara/Kukoshi)" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi"
-libraryDependencies += "org.kukoshi" %% "kukoshi" % "2.0.0"
+libraryDependencies += "org.kiyo% "kiyo" % "2.0.0"
 ```
 
 #### 代替のインストール
@@ -53,8 +53,9 @@ lazy val http_root = project in file(".") dependsOn http
 
 ### インポート
 ライブラリーの`Request`のクラスをインポートして。
+
 ```scala
-import org.kukoshi.Request
+import org.kiyo.Request
 ```  
 
 ### 表明

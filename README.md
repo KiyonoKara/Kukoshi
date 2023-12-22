@@ -39,7 +39,7 @@ credentials += Credentials(
 )
 
 resolvers += "GitHub Package Registry (KiyonoKara/Kukoshi)" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi"
-libraryDependencies += "org.kukoshi" %% "kukoshi" % "2.0.0"
+libraryDependencies += "org.kiyo% "kiyo" % "2.0.0"
 ```
 
 #### Alternate Installation
@@ -55,8 +55,9 @@ Note: The example URL will be `https://kukoshi.scala`, it is not a real website 
 
 ### Importing
 Importing the Request class of the library.
+
 ```scala 
-import org.kukoshi.Request
+import org.kiyo.Request
 ```
 
 ### Declaration
