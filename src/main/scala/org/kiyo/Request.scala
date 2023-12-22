@@ -1,11 +1,11 @@
-package org.kukoshi
+package org.kiyo
 
 /**
  * Created by KiyonoKara - 2021/08/19
  * File Request.scala
  */
 
-import org.kukoshi.Utility.Constants
+import org.kiyo.Utility.Constants
 
 import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
