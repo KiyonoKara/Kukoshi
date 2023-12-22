@@ -1,7 +1,7 @@
 val maintainer: String = "KiyonoKara"
 val packageName: String = "Kukoshi"
 
-name := packageName.toLowerCase
+name := packageName
 description := "A library for making HTTP requests."
 organization := "org.kiyo"
 startYear := Some(2021)
