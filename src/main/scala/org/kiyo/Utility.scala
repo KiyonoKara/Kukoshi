@@ -31,7 +31,7 @@ object Utility {
    * @return Complete URL with the parameters
    */
   def createURL(url: String, urlParameters: Iterable[(String, String)]): String = {
-    val newURL: URL = new URL(new URI(url).toASCIIString)
+    val newURL: URL = new URI(url).toURL
     val separator: String = if (newURL.getQuery != null) "&" else "?"
     val encodedURLParameters: String = Utility.encodeURLParameters(urlParameters)
     s"""$newURL$separator$encodedURLParameters"""
