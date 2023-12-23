@@ -30,11 +30,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
                 readTimeout: Int = 15 * 1000,
                 connectTimeout: Int = 15 * 1000) {
 
-  private lazy val methodField: Field = {
-    val method: Field = classOf[HttpURLConnection].getDeclaredField("method")
-    method.setAccessible(true)
-    method
-  }
 
   /**
    * The request method for doing HTTP/HTTPS requests
@@ -74,12 +69,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
       connection.setRequestMethod(methodUpperCase)
     } else {
       // For methods not supported by HttpURLConnection
-      connection match {
-        case httpURLConnection: HttpURLConnection =>
-          httpURLConnection.getClass.getDeclaredFields.find(_.getName == "delegate").foreach(delegate =>
-            delegate.setAccessible(true)
-            this.methodField.set(delegate.get(httpURLConnection), methodUpperCase))
-      }
+
     }
 
     // Sets headers
