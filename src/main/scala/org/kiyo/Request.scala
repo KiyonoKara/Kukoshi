@@ -241,6 +241,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
     val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
 
     val responseHeaders = response.headers().map()
-    responseHeaders.asScala.view.map((k, v) => (k, v.asScala.toList)).toMap
+    responseHeaders.asScala.map((k, v) => (k, v.asScala.toList)).toMap
   }
 }
