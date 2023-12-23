@@ -137,6 +137,45 @@ class Request(url: String = new String(), method: String = Constants.GET, header
   }
 
   /**
+   * Provides a base HttpClient and HttpRequest builder for abstraction
+   * @param url The URL
+   * @param method The request method
+   * @param hasBody Whether request has a body to send
+   * @param data The data for the body
+   * @param headers Request headers
+   * @param readTimeout Request reading timeout
+   * @param connectTimeout Request connection timeout
+   * @return HttpClient and HttpRequest builders
+   */
+  private def httpBase(url: String,
+                             method: String = Constants.GET,
+                             hasBody: Boolean = true,
+                             data: String = new String(),
+                             headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
+                             readTimeout: Int,
+                             connectTimeout: Int): (HttpClient.Builder, HttpRequest.Builder) = {
+    // Base HttpClient builder
+    val clientBuilder: HttpClient.Builder = HttpClient.newBuilder()
+      .connectTimeout(Duration.ofMillis(connectTimeout))
+
+    // Choose between body publishers
+    val bodyPublisher: HttpRequest.BodyPublisher =
+      if (hasBody)
+        HttpRequest.BodyPublishers.ofString(data)
+      else HttpRequest.BodyPublishers.noBody()
+
+    // Base HttpRequest builder
+    val requestBuilder: HttpRequest.Builder = HttpRequest.newBuilder(URI.create(url))
+      .method(method, bodyPublisher)
+      .timeout(Duration.ofMillis(readTimeout))
+
+    // Set headers
+    for ((k, v) <- headers) requestBuilder.setHeader(k, v)
+
+    (clientBuilder, requestBuilder)
+  }
+
+  /**
    * Writes to a request
    *
    * @param connection HttpURLConnection, existing connection
