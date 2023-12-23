@@ -13,33 +13,36 @@ import java.net.http.HttpRequest.BodyPublisher
 import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
 import java.net.{HttpURLConnection, URI, URL}
 import java.nio.charset.StandardCharsets
+import java.time.Duration
 import java.util
 import scala.io.Source.fromInputStream
 import scala.jdk.CollectionConverters.*
 
 /**
  * Main class for HTTP/HTTPS requests
- * @param url     URL string
- * @param method  Request method
- * @param headers Request headers as an iterable collection of 2-element tuples
- * @param readTimeout Max timeout for reading the request
+ *
+ * @param url            URL string
+ * @param method         Request method
+ * @param headers        Request headers as an iterable collection of 2-element tuples
+ * @param readTimeout    Max timeout for reading the request
  * @param connectTimeout Max timeout for connecting
  */
 class Request(url: String = new String(), method: String = Constants.GET, headers: Iterable[(String, String)] = Map(
-                "Accept-Encoding" -> "gzip, deflate",
-                "Connection" -> "keep-alive"),
-                readTimeout: Int = 15 * 1000,
-                connectTimeout: Int = 15 * 1000) {
+  "Accept-Encoding" -> "gzip, deflate",
+  "Connection" -> "keep-alive"),
+              readTimeout: Int = 15 * 1000,
+              connectTimeout: Int = 15 * 1000) {
 
 
   /**
    * The request method for doing HTTP/HTTPS requests
-   * @param url        URL string
-   * @param method     HTTP request method
-   * @param headers    Iterable[(String, String)], request headers
-   * @param data       Data to pass into the request body
-   * @param parameters URL parameters for querying
-   * @param readTimeout Max timeout for reading the request
+   *
+   * @param url            URL string
+   * @param method         HTTP request method
+   * @param headers        Iterable[(String, String)], request headers
+   * @param data           Data to pass into the request body
+   * @param parameters     URL parameters for querying
+   * @param readTimeout    Max timeout for reading the request
    * @param connectTimeout Max timeout for connecting
    * @return Request output as a string
    */
@@ -60,18 +63,18 @@ class Request(url: String = new String(), method: String = Constants.GET, header
     // Create the connection from the provided URL
     val connection: HttpURLConnection = parsedURL.openConnection.asInstanceOf[HttpURLConnection]
 
-    connection.setReadTimeout(connectTimeout)
-    connection.setConnectTimeout(connectTimeout)
-    connection.setUseCaches(false)
-    connection.setDoOutput(true)
-
     // Set the request method
     if (Constants.HTTPMethods.contains(methodUpperCase)) {
       connection.setRequestMethod(methodUpperCase)
     } else {
       // For methods not supported by HttpURLConnection
-
+      return this.modifierDataRequest(url, method, data, headers, readTimeout, connectTimeout)
     }
+
+    connection.setReadTimeout(connectTimeout)
+    connection.setConnectTimeout(connectTimeout)
+    connection.setUseCaches(false)
+    connection.setDoOutput(true)
 
     // Sets headers
     for ((k, v) <- headers) connection.setRequestProperty(k, v)
@@ -80,7 +83,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
     val content: StringBuilder = new StringBuilder()
 
     // Methods that write to the requests
-    val writeableMethods: Set[String] = Set(Constants.POST, Constants.DELETE, Constants.PUT, Constants.PATCH)
+    val writeableMethods: Set[String] = Set(Constants.POST, Constants.DELETE, Constants.PUT)
 
     if (methodUpperCase.equals(Constants.GET)) {
       content.append(OutputReader.read(connection))
@@ -100,9 +103,42 @@ class Request(url: String = new String(), method: String = Constants.GET, header
     content.toString()
   }
 
+  /**
+   * Intended for requests that modify resources (and aren't supported by HttpURLConnection) and submit data
+   *
+   * @param url            The URL
+   * @param method         Request method
+   * @param data           Data for the request
+   * @param headers        Request headers
+   * @param readTimeout    Reader timeout
+   * @param connectTimeout Connection timeout
+   * @return Response body
+   */
+  private def modifierDataRequest(url: String,
+                                  method: String,
+                                  data: String,
+                                  headers: Iterable[(String, String)],
+                                  readTimeout: Int,
+                                  connectTimeout: Int): String = {
+    val client: HttpClient = HttpClient.newBuilder()
+      .connectTimeout(Duration.ofMillis(connectTimeout))
+      .build()
+
+    val request: HttpRequest.Builder = HttpRequest.newBuilder()
+      .method(method, HttpRequest.BodyPublishers.ofString(data))
+      .timeout(Duration.ofMillis(readTimeout))
+      .uri(URI.create(url))
+
+    // Set the headers
+    for ((k, v) <- headers) request.setHeader(k, v)
+
+    val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
+    response.body
+  }
 
   /**
    * Writes to a request
+   *
    * @param connection HttpURLConnection, existing connection
    * @param data       Data or body to write to the request
    * @return Request output
@@ -153,6 +189,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Creates a HEAD request, there is no written body from HEAD requests
+   *
    * @param url URL string
    * @return Map with all response headers
    */
@@ -174,6 +211,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Makes a simple and fast POST request using Java's HTTP Client.
+   *
    * @param url     Target URL for POST request.
    * @param data    The data / body used to send.
    * @param headers Headers as an iterable collection with 2-element tuples
@@ -182,22 +220,12 @@ class Request(url: String = new String(), method: String = Constants.GET, header
   def post(url: String = this.url,
            data: String = new String(),
            headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
-    val client: HttpClient = HttpClient.newBuilder()
-      .version(HttpClient.Version.HTTP_2)
-      .build()
-
-    val request: HttpRequest.Builder = HttpRequest.newBuilder()
-      .method(Constants.POST, HttpRequest.BodyPublishers.ofString(data))
-      .uri(URI.create(url))
-
-    for ((k, v) <- headers) request.setHeader(k, v)
-
-    val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
-    response.body
+    this.modifierDataRequest(url, Constants.POST, data, headers, this.readTimeout, this.connectTimeout)
   }
 
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
+   *
    * @param url     Provide an URL
    * @param version Provide an optional HTTP version, HTTP_2 or HTTP_1_1 are valid
    * @return Map of the response headers with the options
