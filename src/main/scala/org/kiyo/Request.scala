@@ -9,12 +9,13 @@ import org.kiyo.Utility.Constants
 
 import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
+import java.net.http.HttpRequest.BodyPublisher
 import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
 import java.net.{HttpURLConnection, URI, URL}
 import java.nio.charset.StandardCharsets
 import java.util
 import scala.io.Source.fromInputStream
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -187,7 +188,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
       .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
-      .POST(HttpRequest.BodyPublishers.ofString(data))
+      .method(Constants.POST, HttpRequest.BodyPublishers.ofString(data))
       .uri(URI.create(url))
 
     if (headers.nonEmpty) {
