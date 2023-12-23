@@ -3,6 +3,11 @@ package org.kiyo
 import Utility.Constants
 
 /**
+ * Created 2023/12/22
+ * File RequestContext.scala
+ */
+
+/**
  * Request context for abstracted request functions
  * @param url            The URL
  * @param method         The request method
