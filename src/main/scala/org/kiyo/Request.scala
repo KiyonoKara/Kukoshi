@@ -202,11 +202,10 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
     val response: HttpResponse[Void] = client.send(headRequest, HttpResponse.BodyHandlers.discarding())
     val responseHeaders: HttpHeaders = response.headers()
-    responseHeaders.map.forEach((k, v) => {
-      headers.put(k, v.asScala.toList)
-    })
 
-    headers.asScala.toMap
+    responseHeaders.map.asScala.map((k, v_list) => {
+      k -> v_list.asScala.toList
+    }).toMap
   }
 
   /**
