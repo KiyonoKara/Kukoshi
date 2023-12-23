@@ -20,7 +20,6 @@ import scala.jdk.CollectionConverters.*
 
 /**
  * Main class for HTTP/HTTPS requests
- *
  * @param url            URL string
  * @param method         Request method
  * @param headers        Request headers as an iterable collection of 2-element tuples
@@ -36,7 +35,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * The request method for doing HTTP/HTTPS requests
-   *
    * @param url            URL string
    * @param method         HTTP request method
    * @param headers        Iterable[(String, String)], request headers
@@ -105,7 +103,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Intended for requests that modify resources (and aren't supported by HttpURLConnection) and submit data
-   *
    * @param url            The URL
    * @param method         Request method
    * @param data           Data for the request
@@ -138,22 +135,22 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Provides a base HttpClient and HttpRequest builder for abstraction
-   * @param url The URL
-   * @param method The request method
-   * @param hasBody Whether request has a body to send
-   * @param data The data for the body
-   * @param headers Request headers
-   * @param readTimeout Request reading timeout
+   * @param url            The URL
+   * @param method         The request method
+   * @param hasBody        Whether request has a body to send
+   * @param data           The data for the body
+   * @param headers        Request headers
+   * @param readTimeout    Request reading timeout
    * @param connectTimeout Request connection timeout
    * @return HttpClient and HttpRequest builders
    */
   private def httpBase(url: String,
-                             method: String = Constants.GET,
-                             hasBody: Boolean = true,
-                             data: String = new String(),
-                             headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
-                             readTimeout: Int,
-                             connectTimeout: Int): (HttpClient.Builder, HttpRequest.Builder) = {
+                       method: String = Constants.GET,
+                       hasBody: Boolean = true,
+                       data: String = new String(),
+                       headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
+                       readTimeout: Int,
+                       connectTimeout: Int): (HttpClient.Builder, HttpRequest.Builder) = {
     // Base HttpClient builder
     val clientBuilder: HttpClient.Builder = HttpClient.newBuilder()
       .connectTimeout(Duration.ofMillis(connectTimeout))
@@ -177,7 +174,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Writes to a request
-   *
    * @param connection HttpURLConnection, existing connection
    * @param data       Data or body to write to the request
    * @return Request output
@@ -228,7 +224,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Creates a HEAD request, there is no written body from HEAD requests
-   *
    * @param url URL string
    * @return Map with all response headers
    */
@@ -249,7 +244,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Makes a simple and fast POST request using Java's HTTP Client.
-   *
    * @param url     Target URL for POST request.
    * @param data    The data / body used to send.
    * @param headers Headers as an iterable collection with 2-element tuples
@@ -263,7 +257,6 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
-   *
    * @param url     Provide an URL
    * @param version Provide an optional HTTP version, HTTP_2 or HTTP_1_1 are valid
    * @return Map of the response headers with the options
