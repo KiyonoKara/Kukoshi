@@ -66,7 +66,14 @@ class Request(url: String = new String(), method: String = Constants.GET, header
       connection.setRequestMethod(methodUpperCase)
     } else {
       // For methods not supported by HttpURLConnection
-      return this.modifierDataRequest(url, method, data, headers, readTimeout, connectTimeout)
+      val requestContext: RequestContext = RequestContext(
+        url = url,
+        method = method,
+        data = data,
+        headers = headers,
+        readTimeout = readTimeout,
+        connectTimeout = connectTimeout)
+      return this.modifierDataRequest(requestContext)
     }
 
     connection.setReadTimeout(connectTimeout)
@@ -103,71 +110,41 @@ class Request(url: String = new String(), method: String = Constants.GET, header
 
   /**
    * Intended for requests that modify resources (and aren't supported by HttpURLConnection) and submit data
-   * @param url            The URL
-   * @param method         Request method
-   * @param data           Data for the request
-   * @param headers        Request headers
-   * @param readTimeout    Reader timeout
-   * @param connectTimeout Connection timeout
+   * @param ctx Request context
    * @return Response body
    */
-  private def modifierDataRequest(url: String,
-                                  method: String,
-                                  data: String,
-                                  headers: Iterable[(String, String)],
-                                  readTimeout: Int,
-                                  connectTimeout: Int): String = {
-    val client: HttpClient = HttpClient.newBuilder()
-      .connectTimeout(Duration.ofMillis(connectTimeout))
-      .build()
+  private def modifierDataRequest(ctx: RequestContext): String = {
+    val (client_, request_) = this.httpBase(ctx)
+    val client: HttpClient = client_.build()
+    val request: HttpRequest = request_.build()
 
-    val request: HttpRequest.Builder = HttpRequest.newBuilder()
-      .method(method, HttpRequest.BodyPublishers.ofString(data))
-      .timeout(Duration.ofMillis(readTimeout))
-      .uri(URI.create(url))
-
-    // Set the headers
-    for ((k, v) <- headers) request.setHeader(k, v)
-
-    val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
+    val response: HttpResponse[String] = client.send(request, HttpResponse.BodyHandlers.ofString())
     response.body
   }
 
   /**
    * Provides a base HttpClient and HttpRequest builder for abstraction
-   * @param url            The URL
-   * @param method         The request method
-   * @param hasBody        Whether request has a body to send
-   * @param data           The data for the body
-   * @param headers        Request headers
-   * @param readTimeout    Request reading timeout
-   * @param connectTimeout Request connection timeout
+   * @param ctx Request context
    * @return HttpClient and HttpRequest builders
    */
-  private def httpBase(url: String,
-                       method: String = Constants.GET,
-                       hasBody: Boolean = true,
-                       data: String = new String(),
-                       headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
-                       readTimeout: Int,
-                       connectTimeout: Int): (HttpClient.Builder, HttpRequest.Builder) = {
+  private def httpBase(implicit ctx: RequestContext): (HttpClient.Builder, HttpRequest.Builder) = {
     // Base HttpClient builder
     val clientBuilder: HttpClient.Builder = HttpClient.newBuilder()
-      .connectTimeout(Duration.ofMillis(connectTimeout))
+      .connectTimeout(Duration.ofMillis(ctx.connectTimeout))
 
     // Choose between body publishers
     val bodyPublisher: HttpRequest.BodyPublisher =
-      if (hasBody)
-        HttpRequest.BodyPublishers.ofString(data)
+      if (ctx.hasBody)
+        HttpRequest.BodyPublishers.ofString(ctx.data)
       else HttpRequest.BodyPublishers.noBody()
 
     // Base HttpRequest builder
-    val requestBuilder: HttpRequest.Builder = HttpRequest.newBuilder(URI.create(url))
-      .method(method, bodyPublisher)
-      .timeout(Duration.ofMillis(readTimeout))
+    val requestBuilder: HttpRequest.Builder = HttpRequest.newBuilder(URI.create(ctx.url))
+      .method(ctx.method, bodyPublisher)
+      .timeout(Duration.ofMillis(ctx.readTimeout))
 
     // Set headers
-    for ((k, v) <- headers) requestBuilder.setHeader(k, v)
+    for ((k, v) <- ctx.headers) requestBuilder.setHeader(k, v)
 
     (clientBuilder, requestBuilder)
   }
@@ -252,7 +229,14 @@ class Request(url: String = new String(), method: String = Constants.GET, header
   def post(url: String = this.url,
            data: String = new String(),
            headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
-    this.modifierDataRequest(url, Constants.POST, data, headers, this.readTimeout, this.connectTimeout)
+    this.modifierDataRequest(RequestContext(
+      url = url,
+      method = Constants.POST,
+      data = data,
+      headers = headers,
+      readTimeout = this.readTimeout,
+      connectTimeout = this.connectTimeout)
+    )
   }
 
   /**
