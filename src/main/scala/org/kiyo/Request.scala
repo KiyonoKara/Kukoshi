@@ -114,11 +114,10 @@ class Request(url: String = new String(), method: String = Constants.GET, header
    * @return Response body
    */
   private def modifierDataRequest(ctx: RequestContext): String = {
-    val (client_, request_) = this.httpBase(ctx)
+    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
     val client: HttpClient = client_.build()
-    val request: HttpRequest = request_.build()
 
-    val response: HttpResponse[String] = client.send(request, HttpResponse.BodyHandlers.ofString())
+    val response: HttpResponse[String] = client.send(request_.build(), HttpResponse.BodyHandlers.ofString())
     response.body
   }
 
@@ -129,7 +128,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
    */
   private def httpBase(implicit ctx: RequestContext): (HttpClient.Builder, HttpRequest.Builder) = {
     // Base HttpClient builder
-    val clientBuilder: HttpClient.Builder = HttpClient.newBuilder()
+    val client_ : HttpClient.Builder = HttpClient.newBuilder()
       .connectTimeout(Duration.ofMillis(ctx.connectTimeout))
 
     // Choose between body publishers
@@ -139,14 +138,14 @@ class Request(url: String = new String(), method: String = Constants.GET, header
       else HttpRequest.BodyPublishers.noBody()
 
     // Base HttpRequest builder
-    val requestBuilder: HttpRequest.Builder = HttpRequest.newBuilder(URI.create(ctx.url))
+    val request_ : HttpRequest.Builder = HttpRequest.newBuilder(URI.create(ctx.url))
       .method(ctx.method, bodyPublisher)
       .timeout(Duration.ofMillis(ctx.readTimeout))
 
     // Set headers
-    for ((k, v) <- ctx.headers) requestBuilder.setHeader(k, v)
+    for ((k, v) <- ctx.headers) request_.setHeader(k, v)
 
-    (clientBuilder, requestBuilder)
+    (client_, request_)
   }
 
   /**
@@ -206,12 +205,17 @@ class Request(url: String = new String(), method: String = Constants.GET, header
    */
   def head(url: String = this.url): Map[String, List[String]] = {
     val headers: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
-    val client: HttpClient = HttpClient.newHttpClient()
-    val headRequest: HttpRequest = HttpRequest.newBuilder(URI.create(url))
-      .method(Constants.HEAD, HttpRequest.BodyPublishers.noBody())
-      .build()
+    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
+      url = url,
+      method = Constants.HEAD,
+      hasBody = false,
+      readTimeout = this.readTimeout,
+      connectTimeout = this.connectTimeout
+    ))
 
-    val response: HttpResponse[Void] = client.send(headRequest, HttpResponse.BodyHandlers.discarding())
+    val client: HttpClient = client_.build()
+
+    val response: HttpResponse[Void] = client.send(request_.build(), HttpResponse.BodyHandlers.discarding())
     val responseHeaders: HttpHeaders = response.headers()
 
     responseHeaders.map.asScala.map((k, v_list) => {
@@ -242,19 +246,22 @@ class Request(url: String = new String(), method: String = Constants.GET, header
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
    * @param url     Provide an URL
-   * @param version Provide an optional HTTP version, HTTP_2 or HTTP_1_1 are valid
    * @return Map of the response headers with the options
    */
-  def options(url: String = this.url, version: String = HttpClient.Version.HTTP_2.toString): Map[String, List[String]] = {
-    val client: HttpClient = HttpClient.newBuilder()
-      .version(HttpClient.Version.valueOf(version.toUpperCase))
+  def options(url: String = this.url): Map[String, List[String]] = {
+    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
+      url = url,
+      method = Constants.OPTIONS,
+      hasBody = false,
+      readTimeout = this.readTimeout,
+      connectTimeout = this.connectTimeout
+    ))
+
+    val client: HttpClient = client_.
+      version(HttpClient.Version.HTTP_2)
       .build()
 
-    val request: HttpRequest.Builder = HttpRequest.newBuilder()
-      .method(Constants.OPTIONS, HttpRequest.BodyPublishers.noBody())
-      .uri(URI.create(url))
-
-    val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
+    val response: HttpResponse[String] = client.send(request_.build(), HttpResponse.BodyHandlers.ofString())
 
     val responseHeaders = response.headers().map()
     responseHeaders.asScala.map((k, v) => (k, v.asScala.toList)).toMap
