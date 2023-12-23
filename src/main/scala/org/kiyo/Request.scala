@@ -1,7 +1,7 @@
 package org.kiyo
 
 /**
- * Created by KiyonoKara - 2021/08/19
+ * Created 2021/08/19
  * File Request.scala
  */
 
