@@ -181,10 +181,9 @@ class Request(url: String = new String(), method: String = Constants.GET, header
    */
   def post(url: String = this.url,
            data: String = new String(),
-           headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
-           version: String = HttpClient.Version.HTTP_2.toString): String = {
+           headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
     val client: HttpClient = HttpClient.newBuilder()
-      .version(HttpClient.Version.valueOf(version.toUpperCase))
+      .version(HttpClient.Version.HTTP_2)
       .build()
 
     val request: HttpRequest.Builder = HttpRequest.newBuilder()
