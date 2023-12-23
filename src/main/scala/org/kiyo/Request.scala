@@ -191,9 +191,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
       .method(Constants.POST, HttpRequest.BodyPublishers.ofString(data))
       .uri(URI.create(url))
 
-    if (headers.nonEmpty) {
-      for ((k, v) <- headers) request.setHeader(k, v)
-    }
+    for ((k, v) <- headers) request.setHeader(k, v)
 
     val response: HttpResponse[String] = client.send(request.build(), HttpResponse.BodyHandlers.ofString())
     response.body
