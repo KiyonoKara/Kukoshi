@@ -21,9 +21,8 @@ KukoshiはHTTPリクエストの利用を簡単になります。このクライ
 - Map` か `Seq` 形式のHEADERをサポートしています（`Iterable[(String, String)]` として適応できるCollectionで動作する）
 - `Iterable[(String, String)]` (`Map`、`Seq`)のURLパラメータもできます.
 - **ボーナス機能:**
-    - 外部Library不要
-    - デフォルト：GET.
-    - Headerに基づくRequest`head`か`options`
+    - 外部のライブラリーをダウンロードするのが不要
+    - `head`や`options`有り
 
 ## Installation 
 #### MAIN方法 
@@ -37,7 +36,7 @@ credentials += Credentials(
 )
 
 resolvers += "GitHub Package Registry (KiyonoKara/Kukoshi)" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi"
-libraryDependencies += "org.kiyo% "kiyo" % "2.0.0"
+libraryDependencies += "org.kiyo" %% "kukoshi" % "1.0.0"
 ```
 
 #### 代替のインストール
