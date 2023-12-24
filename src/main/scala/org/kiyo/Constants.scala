@@ -1,6 +1,11 @@
 package org.kiyo
 
 /**
+ * Created 2023/12/23
+ * File Constants.scala
+ */
+
+/**
  * HTTP-related constants
  */
 protected object Constants {
