@@ -26,9 +26,9 @@ import scala.jdk.CollectionConverters.*
  * @param readTimeout    Max timeout for reading the request
  * @param connectTimeout Max timeout for connecting
  */
-class Request(url: String = new String(), method: String = Constants.GET, headers: Iterable[(String, String)] = Map(
-  "Accept-Encoding" -> "gzip, deflate",
-  "Connection" -> "keep-alive"),
+class Request(url: String = new String(),
+              method: String = Constants.GET,
+              headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
               readTimeout: Int = 15 * 1000,
               connectTimeout: Int = 15 * 1000) {
 
