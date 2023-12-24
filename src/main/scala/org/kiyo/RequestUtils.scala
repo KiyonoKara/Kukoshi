@@ -2,7 +2,7 @@ package org.kiyo
 
 /**
  * Created 2021/08/19
- * File Utility.scala
+ * File RequestUtils.scala
  */
 
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
@@ -10,7 +10,7 @@ import java.net.{HttpURLConnection, URI, URL, URLEncoder}
 /**
  * Utility object
  */
-object Utility {
+object RequestUtils {
   /**
    * Creates string of URL parameters
    * @param urlParameters URL parameters as an iterable collection
@@ -33,7 +33,7 @@ object Utility {
   def createURL(url: String, urlParameters: Iterable[(String, String)]): String = {
     val newURL: URL = new URI(url).toURL
     val separator: String = if (newURL.getQuery != null) "&" else "?"
-    val encodedURLParameters: String = Utility.encodeURLParameters(urlParameters)
+    val encodedURLParameters: String = this.encodeURLParameters(urlParameters)
     s"""$newURL$separator$encodedURLParameters"""
   }
 
