@@ -12,18 +12,6 @@ import java.net.{HttpURLConnection, URI, URL, URLEncoder}
  */
 object RequestUtils {
   /**
-   * Creates string of URL parameters
-   * @param urlParameters URL parameters as an iterable collection
-   * @return Formatted URL parameters
-   */
-  private def encodeURLParameters(urlParameters: Iterable[(String, String)]): String = {
-    urlParameters.map({
-      case (k, v) =>
-        s"""${URLEncoder.encode(k, "UTF-8")}=${URLEncoder.encode(v, "UTF-8")}"""
-    }).mkString("&")
-  }
-
-  /**
    * Creates an URL from a supplied base URL
    * then uses provided url parameters provided as an iterable collection of 2-element tuples
    * @param url           URL string
@@ -33,7 +21,10 @@ object RequestUtils {
   def createURL(url: String, urlParameters: Iterable[(String, String)]): String = {
     val newURL: URL = new URI(url).toURL
     val separator: String = if (newURL.getQuery != null) "&" else "?"
-    val encodedURLParameters: String = this.encodeURLParameters(urlParameters)
+    val encodedURLParameters: String = urlParameters.map({
+      case (k, v) =>
+        s"""${URLEncoder.encode(k, "UTF-8")}=${URLEncoder.encode(v, "UTF-8")}"""
+    }).mkString("&")
     s"""$newURL$separator$encodedURLParameters"""
   }
 
