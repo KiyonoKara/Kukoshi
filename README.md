@@ -23,8 +23,7 @@ Kukoshi makes HTTP-based interactions simpler. This client doesn't require a boi
 - Can append URL parameters to a request if they are provided in the form of a `Map` or `Seq` (`Iterable[(String, String)]`).
 - **Bonus Features:**
   - No external dependencies required.
-  - Defaults to GET requests.
-  - `head` and `options` for header-based requests.
+  - `head` and `options` supported.
 
 
 ## Installation
@@ -39,7 +38,7 @@ credentials += Credentials(
 )
 
 resolvers += "GitHub Package Registry (KiyonoKara/Kukoshi)" at "https://maven.pkg.github.com/KiyonoKara/Kukoshi"
-libraryDependencies += "org.kiyo% "kiyo" % "2.0.0"
+libraryDependencies += "org.kiyo" %% "kukoshi" % "1.0.0"
 ```
 
 #### Alternate Installation
