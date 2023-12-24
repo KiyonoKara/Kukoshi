@@ -49,20 +49,4 @@ object Utility {
     )
     strBuilder.toString
   }
-
-  /**
-   * HTTP-related constants
-   */
-  object Constants {
-    val GET: String = "GET"
-    val POST: String = "POST"
-    val DELETE: String = "DELETE"
-    val PUT: String = "PUT"
-    val HEAD: String = "HEAD"
-    val OPTIONS: String = "OPTIONS"
-    val PATCH: String = "PATCH"
-    
-    // Methods the library supports
-    val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
-  }
 }
