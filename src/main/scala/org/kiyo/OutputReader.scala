@@ -17,7 +17,7 @@ protected object OutputReader {
    * @param connection HttpURLConnection
    * @return Data as a String
    */
-  def read(connection: HttpURLConnection): String = {
+  def readConnectionData(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
     var reader: InputStream = connectionInputStream
 

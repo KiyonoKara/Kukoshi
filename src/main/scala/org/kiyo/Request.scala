@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.util
 import scala.io.Source.fromInputStream
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters._
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -91,11 +91,11 @@ class Request(url: String = new String(),
     val writeableMethods: Set[String] = Set(Constants.POST, Constants.DELETE, Constants.PUT)
 
     if (methodUpperCase.equals(Constants.GET)) {
-      content.append(OutputReader.read(connection))
+      content.append(OutputReader.readConnectionData(connection))
       connection.getInputStream.close()
       return content.toString
     } else if (writeableMethods.contains(methodUpperCase)) {
-      content.append(OutputReader.read(connection))
+      content.append(OutputReader.readConnectionData(connection))
       return this.writeToRequest(connection, data)
     }
 
@@ -182,7 +182,7 @@ class Request(url: String = new String(),
 
       // Get output of request
       if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
-        content = OutputReader.read(connection)
+        content = OutputReader.readConnectionData(connection)
       } else {
         val inputStream: InputStream = connection.getInputStream
         content = fromInputStream(inputStream).mkString
