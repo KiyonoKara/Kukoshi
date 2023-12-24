@@ -55,7 +55,7 @@ class Request(url: String = new String(), method: String = Constants.GET, header
     val methodUpperCase = method.toUpperCase()
 
     // Parse the URL along with the parameters
-    val requestURL: String = Utility.createURL(url, parameters)
+    val requestURL: String = RequestUtils.createURL(url, parameters)
     val parsedURL: URL = URI.create(requestURL).toURL
 
     // Create the connection from the provided URL
