@@ -20,11 +20,14 @@ object RequestUtils {
    */
   def createURL(url: String, urlParameters: Iterable[(String, String)]): String = {
     val newURL: URL = new URI(url).toURL
+    // Determine the separator
     val separator: String = if (newURL.getQuery != null) "&" else "?"
+    // Create URL parameters
     val encodedURLParameters: String = urlParameters.map({
       case (k, v) =>
         s"""${URLEncoder.encode(k, "UTF-8")}=${URLEncoder.encode(v, "UTF-8")}"""
     }).mkString("&")
+    // Combine url, separator, and url parameters
     s"""$newURL$separator$encodedURLParameters"""
   }
 
