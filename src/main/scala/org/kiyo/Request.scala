@@ -5,7 +5,7 @@ package org.kiyo
  * File Request.scala
  */
 
-import org.kiyo.Utility.Constants
+import org.kiyo.Constants
 
 import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
