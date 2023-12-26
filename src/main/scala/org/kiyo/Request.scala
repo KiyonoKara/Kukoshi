@@ -7,7 +7,7 @@ package org.kiyo
 
 import org.kiyo.Constants
 
-import java.io.{ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
 import java.net.http.HttpRequest.BodyPublisher
 import java.net.http.{HttpClient, HttpHeaders, HttpRequest, HttpResponse}
@@ -15,8 +15,9 @@ import java.net.{HttpURLConnection, URI, URL}
 import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.util
-import scala.io.Source.fromInputStream
-import scala.jdk.CollectionConverters._
+import java.util.zip.{DeflaterInputStream, GZIPInputStream}
+import scala.io.Source.{fromBytes, fromInputStream}
+import scala.jdk.CollectionConverters.*
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -109,8 +110,18 @@ class Request(url: String = new String(),
     val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
     val client: HttpClient = client_.build()
 
-    val response: HttpResponse[String] = client.send(request_.build(), HttpResponse.BodyHandlers.ofString())
-    response.body
+    val response: HttpResponse[Array[Byte]] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray())
+    val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
+    val content: StringBuilder = new StringBuilder()
+    response.headers().firstValue("Content-Encoding").orElse("") match {
+      case "gzip" =>
+        content.append(fromInputStream(new GZIPInputStream(byteArrayIS)).mkString)
+      case "deflate" =>
+        content.append(fromInputStream(new DeflaterInputStream(byteArrayIS)).mkString)
+      case _ => content.append(fromInputStream(byteArrayIS).mkString)
+    }
+
+    content.toString
   }
 
   /**
