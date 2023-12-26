@@ -35,10 +35,10 @@ protected object OutputReader {
     this.decodeAndRead(connectionInputStream, compression)
   }
 
-  def decodeAndRead(inputStream: InputStream, compression: String): String = {
+  def decodeAndRead(inputStream: InputStream, contentEncoding: String): String = {
     var reader: InputStream = inputStream
 
-    compression match {
+    contentEncoding match {
       case "gzip" => reader = new GZIPInputStream(inputStream)
       case "deflate" => reader = new InflaterInputStream(inputStream)
       case _ => ()
