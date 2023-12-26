@@ -164,7 +164,7 @@ class Request(url: String = new String(),
     val byteArray: Array[Byte] = byteArrayOutputStream.toByteArray
     connection.setFixedLengthStreamingMode(byteArray.length)
 
-    var content: StringBuilder = new StringBuilder()
+    val content: StringBuilder = new StringBuilder()
     try {
       // Write to the request
       val outputStream: DataOutputStream = new DataOutputStream(connection.getOutputStream)
