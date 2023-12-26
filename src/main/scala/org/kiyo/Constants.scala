@@ -19,4 +19,6 @@ protected object Constants {
 
   // Methods HttpURLConnection supports
   val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
+  // Other HTTP methods
+  val otherHTTPMethods: Set[String] = Set(PATCH)
 }
