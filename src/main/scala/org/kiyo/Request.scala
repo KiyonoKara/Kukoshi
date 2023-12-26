@@ -164,7 +164,7 @@ class Request(url: String = new String(),
     val byteArray: Array[Byte] = byteArrayOutputStream.toByteArray
     connection.setFixedLengthStreamingMode(byteArray.length)
 
-    var content: String = new String()
+    var content: StringBuilder = new StringBuilder()
     try {
       // Write to the request
       val outputStream: DataOutputStream = new DataOutputStream(connection.getOutputStream)
@@ -174,10 +174,10 @@ class Request(url: String = new String(),
 
       // Get output of request
       if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
-        content = OutputReader.readConnectionData(connection)
+        content.append(OutputReader.readConnectionData(connection))
       } else {
         val inputStream: InputStream = connection.getInputStream
-        content = fromInputStream(inputStream).mkString
+        content.append(fromInputStream(inputStream).mkString)
         inputStream.close()
       }
     } catch {
@@ -186,7 +186,7 @@ class Request(url: String = new String(),
     } finally {
       connection.disconnect()
     }
-    content
+    content.toString
   }
 
   /**
