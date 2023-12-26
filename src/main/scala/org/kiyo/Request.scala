@@ -64,7 +64,7 @@ class Request(url: String = new String(),
     // Set the request method
     if (Constants.HTTPMethods.contains(methodUpperCase)) {
       connection.setRequestMethod(methodUpperCase)
-    } else {
+    } else if (Constants.otherHTTPMethods.contains(methodUpperCase)) {
       // For methods not supported by HttpURLConnection
       val requestContext: RequestContext = RequestContext(
         url = url,
@@ -90,21 +90,13 @@ class Request(url: String = new String(),
     // Methods that write to the requests
     val writeableMethods: Set[String] = Set(Constants.POST, Constants.DELETE, Constants.PUT)
 
-    if (methodUpperCase.equals(Constants.GET)) {
+    if (writeableMethods.contains(methodUpperCase)) {
+      return this.writeToRequest(connection, data)
+    } else {
       content.append(OutputReader.readConnectionData(connection))
       connection.getInputStream.close()
-      return content.toString
-    } else if (writeableMethods.contains(methodUpperCase)) {
-      content.append(OutputReader.readConnectionData(connection))
-      return this.writeToRequest(connection, data)
     }
 
-    // In case everything fails
-    val inputStream = connection.getInputStream
-    content.clear()
-    content.append(fromInputStream(inputStream).mkString)
-    if (inputStream != null) inputStream.close()
-    // Return content
     content.toString()
   }
 
