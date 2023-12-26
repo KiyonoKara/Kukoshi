@@ -19,7 +19,6 @@ protected object OutputReader {
    */
   def readConnectionData(connection: HttpURLConnection): String = {
     val connectionInputStream: InputStream = connection.getInputStream
-    var reader: InputStream = connectionInputStream
 
     // Get all headers and set all to lowercase
     val headerFields: mutable.Map[String, List[String]] = connection.getHeaderFields.asScala
@@ -27,14 +26,22 @@ protected object OutputReader {
       .map((k, v) => (k.toLowerCase, v.asScala.toList))
 
     // GZIP & Deflate data streaming
-    // Deprecated: connection.getHeaderFields.containsKey("Content-Encoding")
+    var compression: String = new String()
     if (headerFields.getOrElse("content-encoding", List.empty).nonEmpty) {
-      val co_en = headerFields.get("content-encoding").toSeq.flatten
-      co_en match {
-        case gzip if gzip.contains("gzip") => reader = new GZIPInputStream(connectionInputStream)
-        case deflate if deflate.contains("deflate") => reader = new InflaterInputStream(connectionInputStream)
-        case _ => ()
-      }
+      val co_encoding: Seq[String] = headerFields.get("content-encoding").toSeq.flatten
+      compression = co_encoding.head
+    }
+
+    this.decodeAndRead(connectionInputStream, compression)
+  }
+
+  def decodeAndRead(inputStream: InputStream, compression: String): String = {
+    var reader: InputStream = inputStream
+
+    compression match {
+      case "gzip" => reader = new GZIPInputStream(inputStream)
+      case "deflate" => reader = new InflaterInputStream(inputStream)
+      case _ => ()
     }
 
     // Start with empty char value
