@@ -112,16 +112,8 @@ class Request(url: String = new String(),
 
     val response: HttpResponse[Array[Byte]] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray())
     val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
-    val content: StringBuilder = new StringBuilder()
-    response.headers().firstValue("Content-Encoding").orElse("") match {
-      case "gzip" =>
-        content.append(fromInputStream(new GZIPInputStream(byteArrayIS)).mkString)
-      case "deflate" =>
-        content.append(fromInputStream(new DeflaterInputStream(byteArrayIS)).mkString)
-      case _ => content.append(fromInputStream(byteArrayIS).mkString)
-    }
-
-    content.toString
+    val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
+    OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
   }
 
   /**
