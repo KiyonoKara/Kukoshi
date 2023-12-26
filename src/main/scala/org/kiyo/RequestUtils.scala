@@ -39,6 +39,7 @@ object RequestUtils {
   def amend(map: Map[String, List[String]]): String = {
     val strBuilder: StringBuilder = new StringBuilder()
     map.foreach(entry =>
+      // The header key formatted with the list of headers separated by comma
       strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
     )
     strBuilder.toString
