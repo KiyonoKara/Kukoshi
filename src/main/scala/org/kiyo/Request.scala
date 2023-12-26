@@ -183,7 +183,6 @@ class Request(url: String = new String(),
     } catch {
       case error: Error =>
         error.printStackTrace()
-        error.toString
     } finally {
       connection.disconnect()
     }
