@@ -18,6 +18,7 @@ import java.util
 import java.util.zip.{DeflaterInputStream, GZIPInputStream}
 import scala.io.Source.{fromBytes, fromInputStream}
 import scala.jdk.CollectionConverters.*
+import scala.language.implicitConversions
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -108,7 +109,7 @@ class Request(url: String = new String(),
    */
   private def modifierDataRequest(ctx: RequestContext): String = {
     val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
-    
+
     val response: HttpResponse[Array[Byte]] = this.requestBase(requestContext, hasResponseBody = true)
     val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
     val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
@@ -252,7 +253,7 @@ class Request(url: String = new String(),
 
   /**
    * Makes an OPTIONS request and gets the options of a request, identifies allowed methods. May not work with some URLs that are requested due to Cross-Origin Resource Sharing
-   * @param url     Provide an URL
+   * @param url Provide an URL
    * @return Map of the response headers with the options
    */
   def options(url: String = this.url): Map[String, List[String]] = {
@@ -265,8 +266,14 @@ class Request(url: String = new String(),
     ))
 
     val response: HttpResponse[Void] = this.requestBase[Void](requestContext, hasResponseBody = false)
+    response.headers().map().toScalaHeaders
+  }
 
-    val responseHeaders = response.headers().map()
-    responseHeaders.asScala.map((k, v) => (k, v.asScala.toList)).toMap
+  private implicit class ScalaHeaders(private val headerMap: util.Map[String, util.List[String]]) {
+    def toScalaHeaders: Map[String, List[String]] = {
+      this.headerMap.asScala.map((k, v_list) => {
+        k -> v_list.asScala.toList
+      }).toMap
+    }
   }
 }
