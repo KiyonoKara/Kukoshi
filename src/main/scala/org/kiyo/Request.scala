@@ -261,6 +261,7 @@ class Request(url: String = new String(),
       url = url,
       method = Constants.OPTIONS,
       hasBody = false,
+      headers = headers,
       readTimeout = this.readTimeout,
       connectTimeout = this.connectTimeout
     ))
