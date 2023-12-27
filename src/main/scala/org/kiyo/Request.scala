@@ -6,6 +6,7 @@ package org.kiyo
  */
 
 import org.kiyo.Constants
+import org.kiyo.RequestUtils.ScalaHeaders
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
 import java.lang.reflect.{Field, Modifier}
@@ -18,7 +19,7 @@ import java.util
 import java.util.zip.{DeflaterInputStream, GZIPInputStream}
 import scala.io.Source.{fromBytes, fromInputStream}
 import scala.jdk.CollectionConverters.*
-import scala.language.implicitConversions
+
 
 /**
  * Main class for HTTP/HTTPS requests
@@ -269,22 +270,5 @@ class Request(url: String = new String(),
       .headers()
       .map()
       .asScalaHeaderMap
-  }
-
-  /**
-   * Implicit class to convert header maps into Scala maps
-   * @param headerMap Java header map
-   */
-  private implicit class ScalaHeaders(private val headerMap: util.Map[String, util.List[String]]) {
-    /**
-     * Converts Java header map into a Scala map
-     * @return Scala version of the map
-     */
-    def asScalaHeaderMap: Map[String, List[String]] = {
-      // Map into a Scala Map
-      this.headerMap.asScala.map((k, v_list) => {
-        k -> v_list.asScala.toList
-      }).toMap
-    }
   }
 }

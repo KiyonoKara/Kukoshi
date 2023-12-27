@@ -6,6 +6,8 @@ package org.kiyo
  */
 
 import java.net.{HttpURLConnection, URI, URL, URLEncoder}
+import java.util
+import scala.jdk.CollectionConverters.*
 
 /**
  * Utility object
@@ -43,5 +45,22 @@ object RequestUtils {
       strBuilder.append("%s: %s%n".format(entry._1, entry._2.mkString(",")))
     )
     strBuilder.toString
+  }
+
+  /**
+   * Implicit class to convert header maps into Scala maps
+   * @param headerMap Java header map
+   */
+   implicit class ScalaHeaders(private val headerMap: util.Map[String, util.List[String]]) {
+    /**
+     * Converts Java header map into a Scala map
+     * @return Scala version of the map
+     */
+    def asScalaHeaderMap: Map[String, List[String]] = {
+      // Map into a Scala Map
+      this.headerMap.asScala.map((k, v_list) => {
+        k -> v_list.asScala.toList
+      }).toMap
+    }
   }
 }
