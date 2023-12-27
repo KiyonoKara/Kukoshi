@@ -18,7 +18,7 @@ import java.time.Duration
 import java.util
 import java.util.zip.{DeflaterInputStream, GZIPInputStream}
 import scala.io.Source.{fromBytes, fromInputStream}
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 
 /**
