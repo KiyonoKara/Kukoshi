@@ -107,10 +107,9 @@ class Request(url: String = new String(),
    * @return Response body
    */
   private def modifierDataRequest(ctx: RequestContext): String = {
-    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
-    val client: HttpClient = client_.build()
-
-    val response: HttpResponse[Array[Byte]] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray())
+    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
+    
+    val response: HttpResponse[Array[Byte]] = this.requestBase(requestContext, hasResponseBody = true)
     val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
     val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
     OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
@@ -215,8 +214,7 @@ class Request(url: String = new String(),
    * @return Map with all response headers
    */
   def head(url: String = this.url): Map[String, List[String]] = {
-    val headers: util.HashMap[String, List[String]] = new util.HashMap[String, List[String]]
-    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
+    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
       url = url,
       method = Constants.HEAD,
       hasBody = false,
@@ -224,9 +222,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    val client: HttpClient = client_.build()
-
-    val response: HttpResponse[Void] = client.send(request_.build(), HttpResponse.BodyHandlers.discarding())
+    val response: HttpResponse[Void] = this.requestBase(requestContext, false)
     val responseHeaders: HttpHeaders = response.headers()
 
     responseHeaders.map.asScala.map((k, v_list) => {
