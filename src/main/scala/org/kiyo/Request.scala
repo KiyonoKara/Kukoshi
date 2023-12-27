@@ -223,7 +223,10 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    this.requestBase(requestContext, false).headers().map().asScalaHeaderMap
+    this.requestBase(requestContext, false)
+      .headers()
+      .map()
+      .asScalaHeaderMap
   }
 
   /**
