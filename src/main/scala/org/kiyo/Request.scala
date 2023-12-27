@@ -269,6 +269,10 @@ class Request(url: String = new String(),
       .asScalaHeaderMap
   }
 
+  /**
+   * Implicit class to convert header maps into Scala maps
+   * @param headerMap Java header map
+   */
   private implicit class ScalaHeaders(private val headerMap: util.Map[String, util.List[String]]) {
     def asScalaHeaderMap: Map[String, List[String]] = {
       this.headerMap.asScala.map((k, v_list) => {
