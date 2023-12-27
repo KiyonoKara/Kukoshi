@@ -75,7 +75,7 @@ class Request(url: String = new String(),
         headers = headers,
         readTimeout = readTimeout,
         connectTimeout = connectTimeout)
-      return this.modifierDataRequest(requestContext)
+      return this.decodeResponseData(this.httpBase(requestContext))
     }
 
     connection.setReadTimeout(connectTimeout)
@@ -100,20 +100,6 @@ class Request(url: String = new String(),
     }
 
     content.toString()
-  }
-
-  /**
-   * Intended for requests that modify resources (and aren't supported by HttpURLConnection) and submit data
-   * @param ctx Request context
-   * @return Response body
-   */
-  private def modifierDataRequest(ctx: RequestContext): String = {
-    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(ctx)
-
-    val response: HttpResponse[Array[Byte]] = this.requestBase(requestContext, hasResponseBody = true)
-    val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
-    val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
-    OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
   }
 
   /**
@@ -166,18 +152,19 @@ class Request(url: String = new String(),
   }
 
   /**
-   * Provides a base HttpClient and HttpRequest builder for abstraction
-   * @param ctx Request context
-   * @return HttpClient and HttpRequest builders
+   * Builds and sends a request based on the request context
+   * Client may also specify if there is a payload to send and/or receive
+   * @param ctx The request context
+   * @return HttpResponse with an Array[Byte] or Void
    */
-  private def httpBase(implicit ctx: RequestContext): (HttpClient.Builder, HttpRequest.Builder) = {
+  private def httpBase[T](ctx: RequestContext): HttpResponse[T] = {
     // Base HttpClient builder
     val client_ : HttpClient.Builder = HttpClient.newBuilder()
       .connectTimeout(Duration.ofMillis(ctx.connectTimeout))
 
     // Choose between body publishers
     val bodyPublisher: HttpRequest.BodyPublisher =
-      if (ctx.hasBody)
+      if (ctx.`sendsPayload?`)
         HttpRequest.BodyPublishers.ofString(ctx.data)
       else HttpRequest.BodyPublishers.noBody()
 
@@ -189,24 +176,20 @@ class Request(url: String = new String(),
     // Set headers
     for ((k, v) <- ctx.headers) request_.setHeader(k, v)
 
-    (client_, request_)
-  }
-
-  /**
-   * Builds and sends a request based on builders for HttpClient and HttpRequest
-   * If there is a body, it is a byte array
-   * @param requestCtx The request context (from httpBase)
-   * @return HttpResponse with a String or Void
-   */
-  private def requestBase[T](requestCtx: (HttpClient.Builder, HttpRequest.Builder), hasResponseBody: Boolean): HttpResponse[T] = {
-    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = (requestCtx._1, requestCtx._2)
     val client: HttpClient = client_.build()
+
     val bodyHandler: HttpResponse.BodyHandler[T] =
-      if (hasResponseBody) HttpResponse.BodyHandlers.ofByteArray().asInstanceOf[HttpResponse.BodyHandler[T]]
+      if (ctx.`receivesPayload?`) HttpResponse.BodyHandlers.ofByteArray().asInstanceOf[HttpResponse.BodyHandler[T]]
       else HttpResponse.BodyHandlers.discarding().asInstanceOf[HttpResponse.BodyHandler[T]]
 
     val response: HttpResponse[T] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray()).asInstanceOf[HttpResponse[T]]
     response
+  }
+
+  private def decodeResponseData(response: HttpResponse[Array[Byte]]): String = {
+    val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
+    val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
+    OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
   }
 
   /**
@@ -219,14 +202,17 @@ class Request(url: String = new String(),
   def post(url: String = this.url,
            data: String = new String(),
            headers: Iterable[(String, String)] = Iterable.empty): String = {
-    this.modifierDataRequest(RequestContext(
+    val response: HttpResponse[Array[Byte]] = this.httpBase(RequestContext(
       url = url,
       method = Constants.POST,
       data = data,
+      `sendsPayload?` = true,
       headers = headers,
       readTimeout = this.readTimeout,
       connectTimeout = this.connectTimeout)
     )
+
+    this.decodeResponseData(response)
   }
 
   /**
@@ -235,17 +221,17 @@ class Request(url: String = new String(),
    * @return Map with all response headers
    */
   def head(url: String = this.url, headers: Iterable[(String, String)] = this.headers): Map[String, List[String]] = {
-    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
-      url = url,
-      method = Constants.HEAD,
-      hasBody = false,
-      headers = headers,
-      readTimeout = this.readTimeout,
-      connectTimeout = this.connectTimeout
-    ))
-
     // Use the request context then map the headers
-    this.requestBase(requestContext, false)
+    this.httpBase[Void](
+        RequestContext(
+          url = url,
+          method = Constants.HEAD,
+          `receivesPayload?` = false,
+          headers = headers,
+          readTimeout = this.readTimeout,
+          connectTimeout = this.connectTimeout
+        )
+      )
       .headers()
       .map()
       .asScalaHeaderMap
@@ -257,17 +243,16 @@ class Request(url: String = new String(),
    * @return Map of the response headers with the options
    */
   def options(url: String = this.url, headers: Iterable[(String, String)] = this.headers): Map[String, List[String]] = {
-    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
-      url = url,
-      method = Constants.OPTIONS,
-      hasBody = false,
-      headers = headers,
-      readTimeout = this.readTimeout,
-      connectTimeout = this.connectTimeout
-    ))
-
     // Use the request context then map the headers
-    this.requestBase[Void](requestContext, hasResponseBody = false)
+    this.httpBase[Void](
+        RequestContext(
+          url = url,
+          method = Constants.OPTIONS,
+          `receivesPayload?` = false,
+          headers = headers,
+          readTimeout = this.readTimeout,
+          connectTimeout = this.connectTimeout
+        ))
       .headers()
       .map()
       .asScalaHeaderMap
