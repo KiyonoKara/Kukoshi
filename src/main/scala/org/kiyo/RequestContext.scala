@@ -21,6 +21,6 @@ protected case class RequestContext(url: String,
                                     method: String = Constants.GET,
                                     hasBody: Boolean = true,
                                     data: String = new String(),
-                                    headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
+                                    headers: Iterable[(String, String)] = Iterable.empty,
                                     readTimeout: Int,
                                     connectTimeout: Int)

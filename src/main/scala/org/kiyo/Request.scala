@@ -31,10 +31,9 @@ import scala.jdk.CollectionConverters.*
  */
 class Request(url: String = new String(),
               method: String = Constants.GET,
-              headers: Iterable[(String, String)] = Iterable.empty[(String, String)],
+              headers: Iterable[(String, String)] = Iterable.empty,
               readTimeout: Int = 15 * 1000,
               connectTimeout: Int = 15 * 1000) {
-
 
   /**
    * The request method for doing HTTP/HTTPS requests
@@ -51,7 +50,7 @@ class Request(url: String = new String(),
               method: String = this.method,
               headers: Iterable[(String, String)] = this.headers,
               data: String = new String(),
-              parameters: Iterable[(String, String)] = Iterable.empty[(String, String)],
+              parameters: Iterable[(String, String)] = Iterable.empty,
               readTimeout: Int = this.readTimeout,
               connectTimeout: Int = this.connectTimeout): String = {
     // Set method to uppercase
@@ -219,7 +218,7 @@ class Request(url: String = new String(),
    */
   def post(url: String = this.url,
            data: String = new String(),
-           headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
+           headers: Iterable[(String, String)] = Iterable.empty): String = {
     this.modifierDataRequest(RequestContext(
       url = url,
       method = Constants.POST,
@@ -235,11 +234,12 @@ class Request(url: String = new String(),
    * @param url URL string
    * @return Map with all response headers
    */
-  def head(url: String = this.url): Map[String, List[String]] = {
+  def head(url: String = this.url, headers: Iterable[(String, String)] = this.headers): Map[String, List[String]] = {
     val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
       url = url,
       method = Constants.HEAD,
       hasBody = false,
+      headers = headers,
       readTimeout = this.readTimeout,
       connectTimeout = this.connectTimeout
     ))
@@ -256,7 +256,7 @@ class Request(url: String = new String(),
    * @param url Provide an URL
    * @return Map of the response headers with the options
    */
-  def options(url: String = this.url): Map[String, List[String]] = {
+  def options(url: String = this.url, headers: Iterable[(String, String)] = this.headers): Map[String, List[String]] = {
     val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
       url = url,
       method = Constants.OPTIONS,
