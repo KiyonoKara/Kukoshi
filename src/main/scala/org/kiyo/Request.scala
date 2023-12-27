@@ -210,6 +210,26 @@ class Request(url: String = new String(),
   }
 
   /**
+   * Makes a simple and fast POST request using Java's HTTP Client.
+   * @param url     Target URL for POST request.
+   * @param data    The data / body used to send.
+   * @param headers Headers as an iterable collection with 2-element tuples
+   * @return Written output (if any) from the POST request
+   */
+  def post(url: String = this.url,
+           data: String = new String(),
+           headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
+    this.modifierDataRequest(RequestContext(
+      url = url,
+      method = Constants.POST,
+      data = data,
+      headers = headers,
+      readTimeout = this.readTimeout,
+      connectTimeout = this.connectTimeout)
+    )
+  }
+
+  /**
    * Creates a HEAD request, there is no written body from HEAD requests
    * @param url URL string
    * @return Map with all response headers
@@ -228,26 +248,6 @@ class Request(url: String = new String(),
       .headers()
       .map()
       .asScalaHeaderMap
-  }
-
-  /**
-   * Makes a simple and fast POST request using Java's HTTP Client.
-   * @param url     Target URL for POST request.
-   * @param data    The data / body used to send.
-   * @param headers Headers as an iterable collection with 2-element tuples
-   * @return Written output (if any) from the POST request
-   */
-  def post(url: String = this.url,
-           data: String = new String(),
-           headers: Iterable[(String, String)] = Iterable.empty[(String, String)]): String = {
-    this.modifierDataRequest(RequestContext(
-      url = url,
-      method = Constants.POST,
-      data = data,
-      headers = headers,
-      readTimeout = this.readTimeout,
-      connectTimeout = this.connectTimeout)
-    )
   }
 
   /**
