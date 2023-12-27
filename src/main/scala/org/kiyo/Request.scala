@@ -192,8 +192,11 @@ class Request(url: String = new String(),
    * @return The data (decoded if it was encoded via gzip or deflate)
    */
   private def decodeResponseData(response: HttpResponse[Array[Byte]]): String = {
+    // Pass response body into an input stream
     val byteArrayIS: ByteArrayInputStream = new ByteArrayInputStream(response.body())
+    // Search for content encoding
     val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
+    // Pass into the reading function and determine how to decode (if there was any encoding)
     OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
   }
 
