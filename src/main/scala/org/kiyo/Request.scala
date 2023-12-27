@@ -117,50 +117,6 @@ class Request(url: String = new String(),
   }
 
   /**
-   * Provides a base HttpClient and HttpRequest builder for abstraction
-   * @param ctx Request context
-   * @return HttpClient and HttpRequest builders
-   */
-  private def httpBase(implicit ctx: RequestContext): (HttpClient.Builder, HttpRequest.Builder) = {
-    // Base HttpClient builder
-    val client_ : HttpClient.Builder = HttpClient.newBuilder()
-      .connectTimeout(Duration.ofMillis(ctx.connectTimeout))
-
-    // Choose between body publishers
-    val bodyPublisher: HttpRequest.BodyPublisher =
-      if (ctx.hasBody)
-        HttpRequest.BodyPublishers.ofString(ctx.data)
-      else HttpRequest.BodyPublishers.noBody()
-
-    // Base HttpRequest builder
-    val request_ : HttpRequest.Builder = HttpRequest.newBuilder(URI.create(ctx.url))
-      .method(ctx.method, bodyPublisher)
-      .timeout(Duration.ofMillis(ctx.readTimeout))
-
-    // Set headers
-    for ((k, v) <- ctx.headers) request_.setHeader(k, v)
-
-    (client_, request_)
-  }
-
-  /**
-   * Builds and sends a request based on builders for HttpClient and HttpRequest
-   * If there is a body, it is a byte array
-   * @param requestCtx The request context (from httpBase)
-   * @return HttpResponse with a String or Void
-   */
-  private def requestBase[T](requestCtx: (HttpClient.Builder, HttpRequest.Builder), hasResponseBody: Boolean): HttpResponse[T] = {
-    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = (requestCtx._1, requestCtx._2)
-    val client: HttpClient = client_.build()
-    val bodyHandler: HttpResponse.BodyHandler[T] =
-      if (hasResponseBody) HttpResponse.BodyHandlers.ofByteArray().asInstanceOf[HttpResponse.BodyHandler[T]]
-      else HttpResponse.BodyHandlers.discarding().asInstanceOf[HttpResponse.BodyHandler[T]]
-
-    val response: HttpResponse[T] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray()).asInstanceOf[HttpResponse[T]]
-    response
-  }
-
-  /**
    * Writes to a request
    * @param connection HttpURLConnection, existing connection
    * @param data       Data or body to write to the request
@@ -207,6 +163,50 @@ class Request(url: String = new String(),
       connection.disconnect()
     }
     content.toString
+  }
+
+  /**
+   * Provides a base HttpClient and HttpRequest builder for abstraction
+   * @param ctx Request context
+   * @return HttpClient and HttpRequest builders
+   */
+  private def httpBase(implicit ctx: RequestContext): (HttpClient.Builder, HttpRequest.Builder) = {
+    // Base HttpClient builder
+    val client_ : HttpClient.Builder = HttpClient.newBuilder()
+      .connectTimeout(Duration.ofMillis(ctx.connectTimeout))
+
+    // Choose between body publishers
+    val bodyPublisher: HttpRequest.BodyPublisher =
+      if (ctx.hasBody)
+        HttpRequest.BodyPublishers.ofString(ctx.data)
+      else HttpRequest.BodyPublishers.noBody()
+
+    // Base HttpRequest builder
+    val request_ : HttpRequest.Builder = HttpRequest.newBuilder(URI.create(ctx.url))
+      .method(ctx.method, bodyPublisher)
+      .timeout(Duration.ofMillis(ctx.readTimeout))
+
+    // Set headers
+    for ((k, v) <- ctx.headers) request_.setHeader(k, v)
+
+    (client_, request_)
+  }
+
+  /**
+   * Builds and sends a request based on builders for HttpClient and HttpRequest
+   * If there is a body, it is a byte array
+   * @param requestCtx The request context (from httpBase)
+   * @return HttpResponse with a String or Void
+   */
+  private def requestBase[T](requestCtx: (HttpClient.Builder, HttpRequest.Builder), hasResponseBody: Boolean): HttpResponse[T] = {
+    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = (requestCtx._1, requestCtx._2)
+    val client: HttpClient = client_.build()
+    val bodyHandler: HttpResponse.BodyHandler[T] =
+      if (hasResponseBody) HttpResponse.BodyHandlers.ofByteArray().asInstanceOf[HttpResponse.BodyHandler[T]]
+      else HttpResponse.BodyHandlers.discarding().asInstanceOf[HttpResponse.BodyHandler[T]]
+
+    val response: HttpResponse[T] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray()).asInstanceOf[HttpResponse[T]]
+    response
   }
 
   /**
