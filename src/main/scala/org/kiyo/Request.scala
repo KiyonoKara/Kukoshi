@@ -223,6 +223,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
+    // Use the request context then map the headers
     this.requestBase(requestContext, false)
       .headers()
       .map()
@@ -263,6 +264,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
+    // Use the request context then map the headers
     this.requestBase[Void](requestContext, hasResponseBody = false)
       .headers()
       .map()
