@@ -103,7 +103,7 @@ class Request(url: String = new String(),
   }
 
   /**
-   * Writes to a request
+   * Writes to an existing request using an existing HttpURLConnection
    * @param connection HttpURLConnection, existing connection
    * @param data       Data or body to write to the request
    * @return Request output
