@@ -144,6 +144,23 @@ class Request(url: String = new String(),
   }
 
   /**
+   * Builds and sends a request based on builders for HttpClient and HttpRequest
+   * If there is a body, it is a byte array
+   * @param requestCtx The request context (from httpBase)
+   * @return HttpResponse with a String or Void
+   */
+  private def requestBase[T](requestCtx: (HttpClient.Builder, HttpRequest.Builder), hasResponseBody: Boolean): HttpResponse[T] = {
+    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = (requestCtx._1, requestCtx._2)
+    val client: HttpClient = client_.build()
+    val bodyHandler: HttpResponse.BodyHandler[T] =
+      if (hasResponseBody) HttpResponse.BodyHandlers.ofByteArray().asInstanceOf[HttpResponse.BodyHandler[T]]
+      else HttpResponse.BodyHandlers.discarding().asInstanceOf[HttpResponse.BodyHandler[T]]
+
+    val response: HttpResponse[T] = client.send(request_.build(), HttpResponse.BodyHandlers.ofByteArray()).asInstanceOf[HttpResponse[T]]
+    response
+  }
+
+  /**
    * Writes to a request
    * @param connection HttpURLConnection, existing connection
    * @param data       Data or body to write to the request
@@ -243,7 +260,7 @@ class Request(url: String = new String(),
    * @return Map of the response headers with the options
    */
   def options(url: String = this.url): Map[String, List[String]] = {
-    val (client_, request_): (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
+    val requestContext: (HttpClient.Builder, HttpRequest.Builder) = this.httpBase(RequestContext(
       url = url,
       method = Constants.OPTIONS,
       hasBody = false,
@@ -251,9 +268,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    val client: HttpClient = client_.build()
-
-    val response: HttpResponse[Void] = client.send(request_.build(), HttpResponse.BodyHandlers.discarding())
+    val response: HttpResponse[Void] = this.requestBase[Void](requestContext, hasResponseBody = false)
 
     val responseHeaders = response.headers().map()
     responseHeaders.asScala.map((k, v) => (k, v.asScala.toList)).toMap
