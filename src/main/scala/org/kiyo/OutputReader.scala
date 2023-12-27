@@ -35,6 +35,13 @@ protected object OutputReader {
     this.decodeAndRead(connectionInputStream, compression)
   }
 
+  /**
+   * Uses a supplied input stream and specified content encoding and decodes accordingly
+   * If the content encoding type isn't support, it will default to the supplied input stream
+   * @param inputStream The input stream
+   * @param contentEncoding The type of content encoding (gzip or deflate)
+   * @return The (decoded) content
+   */
   def decodeAndRead(inputStream: InputStream, contentEncoding: String): String = {
     var reader: InputStream = inputStream
 
