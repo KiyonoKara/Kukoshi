@@ -223,12 +223,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    val response: HttpResponse[Void] = this.requestBase(requestContext, false)
-    val responseHeaders: HttpHeaders = response.headers()
-
-    responseHeaders.map.asScala.map((k, v_list) => {
-      k -> v_list.asScala.toList
-    }).toMap
+    this.requestBase(requestContext, false).headers().map().asScalaHeaderMap
   }
 
   /**
@@ -265,12 +260,14 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    val response: HttpResponse[Void] = this.requestBase[Void](requestContext, hasResponseBody = false)
-    response.headers().map().toScalaHeaders
+    this.requestBase[Void](requestContext, hasResponseBody = false)
+      .headers()
+      .map()
+      .asScalaHeaderMap
   }
 
   private implicit class ScalaHeaders(private val headerMap: util.Map[String, util.List[String]]) {
-    def toScalaHeaders: Map[String, List[String]] = {
+    def asScalaHeaderMap: Map[String, List[String]] = {
       this.headerMap.asScala.map((k, v_list) => {
         k -> v_list.asScala.toList
       }).toMap
