@@ -38,6 +38,7 @@ protected object OutputReader {
   def decodeAndRead(inputStream: InputStream, contentEncoding: String): String = {
     var reader: InputStream = inputStream
 
+    // Determine whether content encoding is gzip or deflate
     contentEncoding match {
       case "gzip" => reader = new GZIPInputStream(inputStream)
       case "deflate" => reader = new InflaterInputStream(inputStream)
