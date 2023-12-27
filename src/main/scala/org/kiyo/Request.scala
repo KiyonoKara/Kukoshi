@@ -253,7 +253,7 @@ class Request(url: String = new String(),
 
     val client: HttpClient = client_.build()
 
-    val response: HttpResponse[String] = client.send(request_.build(), HttpResponse.BodyHandlers.ofString())
+    val response: HttpResponse[Void] = client.send(request_.build(), HttpResponse.BodyHandlers.discarding())
 
     val responseHeaders = response.headers().map()
     responseHeaders.asScala.map((k, v) => (k, v.asScala.toList)).toMap
