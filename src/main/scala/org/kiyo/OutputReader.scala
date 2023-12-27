@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.util.zip.{GZIPInputStream, InflaterInputStream}
 import scala.collection.mutable
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.{MapHasAsScala, ListHasAsScala}
 
 protected object OutputReader {
   /**
