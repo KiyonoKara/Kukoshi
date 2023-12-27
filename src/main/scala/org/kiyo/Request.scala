@@ -251,9 +251,7 @@ class Request(url: String = new String(),
       connectTimeout = this.connectTimeout
     ))
 
-    val client: HttpClient = client_.
-      version(HttpClient.Version.HTTP_2)
-      .build()
+    val client: HttpClient = client_.build()
 
     val response: HttpResponse[String] = client.send(request_.build(), HttpResponse.BodyHandlers.ofString())
 
