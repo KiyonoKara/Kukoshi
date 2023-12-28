@@ -142,9 +142,6 @@ class Request(url: String = new String(),
         content.append(fromInputStream(inputStream).mkString)
         inputStream.close()
       }
-    } catch {
-      case error: Error =>
-        error.printStackTrace()
     } finally {
       connection.disconnect()
     }
