@@ -5,7 +5,7 @@ package org.kiyo
  * File Request.scala
  */
 
-import org.kiyo.Constants
+import org.kiyo.{Constants, RequestUtils}
 import org.kiyo.RequestUtils.ScalaHeaders
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataOutputStream, InputStream, OutputStream}
@@ -95,7 +95,7 @@ class Request(url: String = new String(),
     if (writeableMethods.contains(methodUpperCase)) {
       return this.writeToRequest(connection, data)
     } else {
-      content.append(OutputReader.readConnectionData(connection))
+      content.append(RequestUtils.readConnectionData(connection))
       connection.getInputStream.close()
     }
 
@@ -136,7 +136,7 @@ class Request(url: String = new String(),
 
       // Get output of request
       if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
-        content.append(OutputReader.readConnectionData(connection))
+        content.append(RequestUtils.readConnectionData(connection))
       } else {
         val inputStream: InputStream = connection.getInputStream
         content.append(fromInputStream(inputStream).mkString)
@@ -194,7 +194,7 @@ class Request(url: String = new String(),
     // Search for content encoding
     val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
     // Pass into the reading function and determine how to decode (if there was any encoding)
-    OutputReader.decodeAndRead(byteArrayIS, contentEncoding)
+    RequestUtils.decodeAndRead(byteArrayIS, contentEncoding)
   }
 
   /**
