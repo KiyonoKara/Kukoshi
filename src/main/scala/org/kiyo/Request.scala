@@ -109,11 +109,13 @@ case class Request(url: String = new String(),
    * @return Request output
    */
   private def writeToRequest(connection: HttpURLConnection, data: String): String = {
+    val c_inputStream: InputStream = connection.getInputStream
+    val c_outputStream: OutputStream = connection.getOutputStream
+
     // Check data
     if (data.isEmpty) {
-      val inputStream: InputStream = connection.getInputStream
-      val content: String = fromInputStream(inputStream).mkString
-      inputStream.close()
+      val content: String = fromInputStream(c_inputStream).mkString
+      c_inputStream.close()
       return content
     }
 
@@ -129,18 +131,15 @@ case class Request(url: String = new String(),
     val content: StringBuilder = new StringBuilder()
     try {
       // Write to the request
-      val outputStream: DataOutputStream = new DataOutputStream(connection.getOutputStream)
+      val outputStream: DataOutputStream = new DataOutputStream(c_outputStream)
       outputStream.write(byteArray, 0, byteArray.length)
       outputStream.flush()
       outputStream.close()
 
-      // Get output of request
-      if (connection.getResponseCode == HttpURLConnection.HTTP_OK) {
+      // Check if response code is 200 - 299
+      if (connection.getResponseCode >= HttpURLConnection.HTTP_OK && connection.getResponseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+        // Get output of request
         content.append(RequestUtils.readConnectionData(connection))
-      } else {
-        val inputStream: InputStream = connection.getInputStream
-        content.append(fromInputStream(inputStream).mkString)
-        inputStream.close()
       }
     } finally {
       connection.disconnect()
