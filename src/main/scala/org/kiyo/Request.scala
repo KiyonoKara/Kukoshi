@@ -81,7 +81,16 @@ case class Request(url: String = new String(),
     connection.setReadTimeout(connectTimeout)
     connection.setConnectTimeout(connectTimeout)
     connection.setUseCaches(false)
-    connection.setDoOutput(true)
+
+    // HEAD and OPTIONS which are no-body methods will return formatted headers
+    if (Constants.noBodyHTTPMethods.contains(methodUpperCase)) {
+      connection.setDoOutput(false)
+      return RequestUtils.amend(connection
+        .getHeaderFields
+        .asScalaHeaderMap)
+    } else {
+      connection.setDoOutput(true)
+    }
 
     // Sets headers
     for ((k, v) <- headers) connection.setRequestProperty(k, v)
