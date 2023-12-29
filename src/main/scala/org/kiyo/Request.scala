@@ -29,7 +29,7 @@ import scala.jdk.CollectionConverters.MapHasAsScala
  * @param readTimeout    Max timeout for reading the request
  * @param connectTimeout Max timeout for connecting
  */
-class Request(url: String = new String(),
+case class Request(url: String = new String(),
               method: String = Constants.GET,
               headers: Iterable[(String, String)] = Iterable.empty,
               readTimeout: Int = 15 * 1000,
