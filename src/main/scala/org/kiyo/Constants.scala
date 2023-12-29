@@ -21,4 +21,5 @@ protected object Constants {
   val HTTPMethods: Set[String] = Set(GET, POST, DELETE, PUT, HEAD, OPTIONS)
   // Other HTTP methods
   val otherHTTPMethods: Set[String] = Set(PATCH)
+  val noBodyHTTPMethods: Set[String] = Set(HEAD, OPTIONS)
 }
