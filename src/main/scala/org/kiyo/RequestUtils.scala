@@ -70,7 +70,7 @@ object RequestUtils {
       compression = co_encoding.head
     }
 
-    this.decodeAndRead(connectionInputStream, compression)
+    this.decodeStream(connectionInputStream, compression)
   }
 
   /**
@@ -80,7 +80,7 @@ object RequestUtils {
    * @param contentEncoding The type of content encoding (gzip or deflate)
    * @return The (decoded) content
    */
-  def decodeAndRead(inputStream: InputStream, contentEncoding: String): String = {
+  def decodeStream(inputStream: InputStream, contentEncoding: String): String = {
     var reader: InputStream = inputStream
 
     // Determine whether content encoding is gzip or deflate
