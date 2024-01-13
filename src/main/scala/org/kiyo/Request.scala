@@ -202,7 +202,7 @@ case class Request(url: String = new String(),
     // Search for content encoding
     val contentEncoding: String = response.headers().firstValue("Content-Encoding").orElse("")
     // Pass into the reading function and determine how to decode (if there was any encoding)
-    RequestUtils.decodeAndRead(byteArrayIS, contentEncoding)
+    RequestUtils.decodeStream(byteArrayIS, contentEncoding)
   }
 
   /**
