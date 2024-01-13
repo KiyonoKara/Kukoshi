@@ -1,4 +1,4 @@
-# Kukoshi 
+# Kukoshi
 
 <div>
   <p>
@@ -11,23 +11,23 @@
   </p>
 </div>
 
-Kukoshi, is a Scala library made for making HTTP / HTTPS requests.
+Kukoshi, is a Scala library made to simplify Java's network suite for making HTTP requests and reading responses.
 
 ## Overview
-Kukoshi makes HTTP-based interactions simpler. This client doesn't require a boilerplate set-up or a blend of imports.
+Kukoshi makes HTTP-based interactions simpler. This client doesn't require any boilerplate set-up or a blend of imports.
 
 ## Features
-- GZIP and Deflate support for compressed responses and data. 
+- GZIP and Deflate support for compressed responses and data.
 - Supports GET, POST, DELETE, PUT, HEAD, OPTIONS, PATCH methods.
 - Library supports headers in the form of a `Map` or `Seq` (works with collections that can be adapted as `Iterable[(String, String)]`).
-- Can append URL parameters to a request if they are provided in the form of a `Map` or `Seq` (`Iterable[(String, String)]`).
+- Can append URL parameters to a request if they are provided in the form of a (`Iterable[(String, String)]`).
 - **Bonus Features:**
   - No external dependencies required.
-  - `head` and `options` supported.
+  - `head` and `options` supported for headers, data returned as a Scala map.
 
 
 ## Installation
-### Main (Preferred) Installation 
+### Main (Preferred) Installation
 The credentials need a token with the `read:packages` permission, the username field can be an empty string.
 ```sbt
 credentials += Credentials(
@@ -50,7 +50,7 @@ lazy val http_root = project in file(".") dependsOn http
 ## Documentation
 As a preface, there is one read-only method, which is `GET`. Other methods such as `POST`, `DELETE`, `PUT`, and `PATCH` are writable methods (`DELETE` usually doesn't require a body`).
 
-Note: The example URL will be `https://kukoshi.scala`, it is not a real website nor host.
+Note: The example URL will be `https://kukoshi.sc`, it is not a real website nor host.
 
 ### Importing
 Importing the Request class of the library.
@@ -61,52 +61,47 @@ import org.kiyo.Request
 
 ### Declaration
 Primarily, the Kukoshi library is utilized through its `Request` class. There are several ways the class can be used.   
-Creating a `Request` object.
+Creating an instance of the `Request` case class.
 ```scala
-// A regular Request object.
-val requester: Request = new Request()
+// A regular Request instance.
+val requester: Request = Request()
 ```
 
-Optionally declaring the URL, method, and headers in the parameters. If you declare these in the constructor, you can carry out most requests using `request()` without input parameters.   
+Optionally, you may declare the URL, method, headers and timeouts in the case class' parameters. If you declare these in the constructor, you can carry out most requests without supplying parameters to the `request()` function call.
 
 ### Creating a Request
 Read-only request examples.
 ```scala
 // Defaults to a GET request if no method is provided.
 // Example works if there is nothing provided in the request function, but in the constructor.
-val requesterA: Request = new Request(url = "https://kukoshi.scala")
+val requesterA: Request = Request(url = "https://kukoshi.sc")
 val getA: String = requester.request()
 
 // Works the other way around.
-val requesterB: Request = new Request()
-val getB: String = requester.request(url = "https://kukoshi.scala")
+val requesterB: Request = Request()
+val getB: String = requester.request(url = "https://kukoshi.sc")
 ```
 
 ### Headers
-Headers are accepted in the form of any collection that can be adapted as `Iterable[(String, String)]`, this includes but is not limited to `Map` and `Seq`.
+Headers are accepted in the form of any collection extending from `Iterable[(String, String)]`, this includes but isn't limited to `Map` and `Seq`.
 ```scala
 // Examples for Map and Seq
-val requesterWithMapHeaders: Request = new Request(
-  url = "https://kukoshi.scala", 
+val requesterWithMapHeaders: Request = Request(
+  url = "https://kukoshi.sc", 
   headers = Map("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
-)
-
-val requesterWithSeqHeaders: Request = new Request(
-  url = "https://kukoshi.scala",
-  headers = Seq("Content-Type" -> "User-Agent" -> "*", "Accept" -> "*/*")
 )
 ```
 
 ### URL Parameters
-When appending URL parameters to the request, URL parameters can only be added in `request()` calls. URL parameters are also accepted in the form of any collection, adaptable as `Iterable[(String, String)]`.
+When appending URL parameters to the request, URL parameters can only be added in `request()` function calls. URL parameters are taken with anything following the `Iterable[(String, String)]` type format.
 ```scala
-// Requests to "https://kukoshi.scala?parameter=value"
-val requesterA: Request = new Request()
-val requestA: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter" -> "value"))
+// Requests to "https://kukoshi.sc?parameter=value"
+val requesterA: Request = Request()
+val requestA: String = requester.request(url = "https://kukoshi.sc", parameters = Map("parameter" -> "value"))
 
-// Requests to "https://kukoshi.scala?parameter1=value1&parameter2=value2"
-val requesterB: Request = new Request()
-val requestB: String = requester.request(url = "https://kukoshi.scala", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
+// Requests to "https://kukoshi.sc?parameter1=value1&parameter2=value2"
+val requesterB: Request = Request()
+val requestB: String = requester.request(url = "https://kukoshi.sc", parameters = Map("parameter1" -> "value1", "parameter2" -> "value2"))
 ```
 
 ### Writable Requests
@@ -114,12 +109,27 @@ Writable requests generally require the `request()` function to be used since da
 ```scala
 // POST request example, similar requests like this can be made for DELETE, PUT, and PATCH. 
 // Be sure to include headers if the APIs you are requesting to require them.
-val requester: Request = new Request()
-val POST: String = requester.request(url = "https://kukoshi.scala", method = "POST", data = "{\"key\": \"value\"}")
+val requester: Request = Request()
+val POST: String = requester.request(url = "https://kukoshi.sc", method = "POST", data = "{\"key\": \"value\"}")
+```
+
+### Alternative HTTP Methods
+`head` and `options` are HTTP methods that don't return bodies or response data. Only the headers are intended to be accessed.
+The `Request` case class has both of these methods as functions, and use the URL and headers (following the type format).
+Both return a Scala map as `Map[String, List[String]]`
+
+HEAD request.
+```scala
+val req = Request("https://kukoshi.sc", Map("Authorization" -> "authorization_token_here"))
+val resHeaders: Map[String, List[String]] = req.head()
+```
+
+OPTIONS request.
+```scala
+
+val req = Request("https://kukoshi.sc", Map("Authorization" -> "authorization_token_here"))
+val resHeaders: Map[String, List[String]] = req.options()
 ```
 
 ## Contributing
-Read about contributing to this library and its repository [here](CONTRIBUTING.md).
-
-## License
-[Apache 2.0 License](LICENSE.md)
+Read about contributing [here](CONTRIBUTING.md).
