@@ -2,11 +2,11 @@ val maintainer: String = "KiyonoKara"
 val packageName: String = "Kukoshi"
 
 ThisBuild / name := packageName
-ThisBuild / description := "A library for making HTTP requests."
+ThisBuild / description := "A Scala HTTP client to make HTTP requests and return responses"
 ThisBuild / organization := "org.kiyo"
 ThisBuild / startYear := Some(2021)
 
-ThisBuild / version := "2.0.0"
+ThisBuild / version := "1.0.0"
 ThisBuild / scalaVersion := "3.2.2"
 ThisBuild / crossScalaVersions := Seq("2.13.10", scalaVersion.value)
 ThisBuild / versionScheme := Some("semver-spec")
