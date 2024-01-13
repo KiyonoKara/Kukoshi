@@ -23,3 +23,5 @@ ThisBuild / credentials += Credentials(
   maintainer,
   sys.env.getOrElse("GITHUB_TOKEN", "")
 )
+
+Global / lintUnusedKeysOnLoad := false
