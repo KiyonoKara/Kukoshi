@@ -6,8 +6,7 @@ Supported versions.
 
 | Version | Supported          |
 |---------|--------------------|
-| 2.0.0   | :white_check_mark: |
-| ≤ 1.x.x | :x:                |
+| 1.0.0   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
